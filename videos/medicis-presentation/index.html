@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <title>Médicis Immobilier Neuf — Présentation</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Poppins"; font-weight: 300; src: url("assets/fonts/poppins-latin-300-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 400; src: url("assets/fonts/poppins-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 500; src: url("assets/fonts/poppins-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 600; src: url("assets/fonts/poppins-latin-600-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 700; src: url("assets/fonts/poppins-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 800; src: url("assets/fonts/poppins-latin-800-normal.woff2") format("woff2"); }
+
+      :root {
+        --blue: #3862b7;
+        --navy: #17405d;
+        --salmon: #f25e56;
+        --orange: #f14c33;
+        --celadon: #26b3b0;
+        --lime: #d0e411;
+        --white: #ffffff;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1080px; overflow: hidden; background: var(--blue); }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--blue);
+        font-family: "Poppins", sans-serif;
+        color: var(--navy);
+      }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .ground { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      .mask { overflow: hidden; display: block; }
+      .mask > span { display: block; }
+      svg { display: block; }
+
+      /* ---------- Scene 1 : logo ---------- */
+      #s1 .ground { background: var(--blue); }
+      #s1-logo { left: 140px; top: 360px; width: 800px; height: 310px; }
+      #s1-logo svg { width: 100%; height: 100%; overflow: visible; }
+      #s1-stripe { left: 0; right: 0; bottom: 0; height: 26px; display: flex; }
+      #s1-stripe div { flex: 1; height: 100%; }
+
+      /* ---------- Scene 2 : qui sommes-nous ---------- */
+      #s2 .ground { background: var(--white); }
+      #s2-kicker {
+        left: 90px; top: 200px; padding: 14px 28px; border-radius: 40px;
+        background: var(--orange); color: var(--white);
+        font-size: 30px; font-weight: 600; letter-spacing: 0.08em;
+      }
+      #s2-title { left: 90px; top: 330px; width: 920px; }
+      #s2-title .line { white-space: nowrap; font-size: 80px; font-weight: 700; line-height: 1.12; color: var(--navy); }
+      #s2-title .line.light { font-weight: 300; }
+      #s2-title .hl { position: relative; display: inline-block; isolation: isolate; }
+      #s2-hl-bg { position: absolute; left: -10px; right: -14px; top: 22%; bottom: 6%; background: var(--lime); z-index: -1; }
+      #s2-title .hl-text { position: relative; z-index: 1; }
+      #s2-swoosh { left: 90px; top: 760px; width: 300px; height: 90px; }
+      #s2-sub { left: 90px; top: 770px; width: 900px; font-size: 42px; font-weight: 400; color: var(--blue); line-height: 1.3; }
+      #s2-sub b { font-weight: 700; }
+
+      /* ---------- Scene 3 : habiter / investir ---------- */
+      #s3-top { left: 0; top: 0; width: 1080px; height: 540px; background: var(--celadon); }
+      #s3-bot { left: 0; top: 540px; width: 1080px; height: 540px; background: var(--lime); }
+      .s3-label { position: absolute; left: 90px; font-size: 40px; font-weight: 300; }
+      .s3-word { position: absolute; left: 90px; font-size: 118px; font-weight: 800; line-height: 1; letter-spacing: -0.01em; }
+      #s3-top .s3-label { top: 175px; color: var(--navy); }
+      #s3-top .s3-word { top: 240px; color: var(--navy); }
+      #s3-bot .s3-label { top: 165px; color: var(--navy); }
+      #s3-bot .s3-word { top: 230px; color: var(--navy); }
+      .s3-icon { position: absolute; right: 100px; width: 230px; height: 230px; }
+      #s3-top .s3-icon { top: 150px; }
+      #s3-bot .s3-icon { top: 150px; }
+      .s3-icon path { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+      #s3-top .s3-icon path { stroke: var(--white); stroke-width: 8; }
+      #s3-bot .s3-icon path { stroke: var(--navy); }
+      #s3-badge {
+        left: 365px; top: 365px; width: 350px; height: 350px; border-radius: 50%;
+        background: var(--orange); color: var(--white);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+      }
+      #s3-badge .a { font-size: 34px; font-weight: 300; line-height: 1.1; }
+      #s3-badge .b { font-size: 52px; font-weight: 800; line-height: 1.05; }
+
+      /* ---------- Scene 4 : accompagnement ---------- */
+      #s4 .ground { background: var(--blue); }
+      #s4-title { left: 90px; top: 120px; width: 900px; color: var(--white); }
+      #s4-title .t1 { font-size: 46px; font-weight: 300; line-height: 1.2; }
+      #s4-title .t2 { font-size: 86px; font-weight: 800; line-height: 1.15; }
+      #s4-title .t2 em { font-style: normal; color: var(--lime); }
+      #s4-line { left: 133px; top: 420px; width: 6px; height: 520px; background: rgba(255, 255, 255, 0.35); transform-origin: top center; }
+      .step { position: absolute; left: 90px; width: 900px; height: 92px; display: flex; align-items: center; gap: 36px; }
+      .step .num {
+        flex: 0 0 92px; height: 92px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 34px; font-weight: 700; color: var(--navy); background: var(--white);
+      }
+      .step .txt { font-size: 46px; font-weight: 600; color: var(--white); }
+      #step1 { top: 420px; } #step2 { top: 562px; } #step3 { top: 704px; } #step4 { top: 846px; }
+      #step1 .num { background: var(--lime); }
+      #step2 .num { background: var(--celadon); color: var(--navy); }
+      #step3 .num { background: var(--salmon); color: var(--white); }
+      #step4 .num { background: var(--orange); color: var(--white); }
+
+      /* ---------- Scene 5 : signature ---------- */
+      #s5 .ground { background: var(--white); }
+      #s5-quote-l { left: 90px; top: 150px; width: 150px; height: 130px; }
+      #s5-quote-r { left: 840px; top: 760px; width: 150px; height: 130px; }
+      .quote path { fill: var(--orange); }
+      #s5-l1 { left: 0; width: 1080px; top: 330px; text-align: center; font-size: 104px; font-weight: 300; color: var(--navy); line-height: 1; }
+      #s5-oui { left: 395px; top: 430px; width: 290px; height: 213px; }
+      #s5-l2 { left: 0; width: 1080px; top: 670px; text-align: center; font-size: 64px; font-weight: 300; color: var(--navy); line-height: 1; }
+      #s5-neuf { left: 330px; top: 745px; width: 420px; height: 210px; }
+      #s5-oui img, #s5-neuf img { width: 100%; height: 100%; display: block; }
+
+      /* ---------- Scene 6 : logo final ---------- */
+      #s6 .ground { background: var(--blue); }
+      #s6-logo { left: 190px; top: 330px; width: 700px; height: 272px; }
+      #s6-logo svg { width: 100%; height: 100%; overflow: visible; }
+      #s6-url { left: 0; width: 1080px; top: 720px; text-align: center; font-size: 38px; font-weight: 500; color: var(--white); letter-spacing: 0.02em; }
+      #s6-rule { left: 470px; top: 680px; width: 140px; height: 6px; background: var(--lime); transform-origin: center; }
+      #s6-stripe { left: 0; right: 0; bottom: 0; height: 26px; display: flex; }
+      #s6-stripe div { flex: 1; height: 100%; }
+
+      /* ---------- Transitions : bandes de la palette ---------- */
+      #wipes { position: absolute; inset: 0; pointer-events: none; }
+      .wipe { position: absolute; inset: 0; }
+      .wipe .bar { position: absolute; left: 0; width: 1080px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1080" data-height="1080">
+
+      <!-- Scene 1 : ouverture logo -->
+      <section id="s1" class="scene clip" data-start="0" data-duration="5" data-track-index="0">
+        <div class="ground"></div>
+        <div id="s1-logo" class="abs"><svg viewBox="284 236 268 104" aria-label="médicis immobilier neuf"><g class="word" fill="#FFFFFF"><path d="M 454.214844 244.589844 L 454.855469 244.589844 C 457.847656 244.589844 460.273438 247.015625 460.273438 250.007812 C 460.273438 253 457.847656 255.429688 454.855469 255.429688 L 454.214844 255.429688 C 451.222656 255.429688 448.796875 253 448.796875 250.007812 C 448.796875 247.015625 451.222656 244.589844 454.214844 244.589844 "/><path d="M 512.894531 244.589844 L 513.53125 244.589844 C 516.523438 244.589844 518.949219 247.015625 518.949219 250.007812 C 518.949219 253 516.523438 255.429688 513.53125 255.429688 L 512.894531 255.429688 C 509.898438 255.429688 507.472656 253 507.472656 250.007812 C 507.472656 247.015625 509.898438 244.589844 512.894531 244.589844 "/><path d="M 288.921875 262.550781 L 297.203125 262.550781 L 298.277344 268.679688 C 300.429688 264.789062 305.066406 261.558594 310.78125 261.558594 C 315.832031 261.558594 320.136719 263.546875 322.707031 268.679688 C 325.6875 264.042969 330.40625 261.558594 335.707031 261.558594 C 344.566406 261.558594 350.613281 267.273438 350.613281 278.203125 L 350.613281 303.957031 L 340.921875 303.957031 L 340.921875 279.28125 C 340.921875 273.152344 338.109375 270.253906 333.886719 270.253906 C 328.832031 270.253906 324.609375 274.726562 324.609375 284 L 324.609375 303.957031 L 314.921875 303.957031 L 314.921875 279.28125 C 314.921875 273.152344 312.105469 270.253906 307.882812 270.253906 C 302.914062 270.253906 298.609375 274.726562 298.609375 284.414062 L 298.609375 303.957031 L 288.921875 303.957031 Z M 288.921875 262.550781 "/><path d="M 365.179688 278.949219 L 386.789062 278.949219 C 386.046875 272.902344 381.738281 269.59375 376.191406 269.59375 C 371.058594 269.59375 366.421875 272.324219 365.179688 278.949219 M 376.273438 304.949219 C 363.523438 304.949219 355.488281 295.839844 355.488281 283.335938 C 355.488281 270.585938 363.851562 261.558594 376.191406 261.558594 C 389.605469 261.558594 396.5625 271.082031 396.5625 282.09375 C 396.5625 283.253906 396.480469 284.746094 396.230469 285.820312 L 365.011719 285.820312 C 366.003906 293.273438 370.726562 296.421875 376.855469 296.421875 C 382.070312 296.421875 385.21875 293.855469 387.121094 290.210938 L 395.15625 293.9375 C 392.089844 300.480469 385.714844 304.949219 376.273438 304.949219 "/><path d="M 408.941406 283.253906 C 408.941406 290.871094 414.074219 296.335938 421.03125 296.335938 C 427.90625 296.335938 432.957031 291.039062 432.957031 283.253906 C 432.957031 275.472656 427.90625 270.171875 421.03125 270.171875 C 414.074219 270.171875 408.941406 275.636719 408.941406 283.253906 M 419.128906 304.949219 C 407.949219 304.949219 399.171875 296.089844 399.171875 283.253906 C 399.171875 269.921875 408.527344 261.558594 419.457031 261.558594 C 425.75 261.558594 430.304688 264.625 432.375 267.6875 L 432.375 244.75 L 442.0625 244.75 L 442.0625 303.957031 L 433.785156 303.957031 L 432.707031 298.324219 C 430.472656 301.804688 425.335938 304.949219 419.128906 304.949219 "/><path d="M 449.734375 262.550781 L 459.421875 262.550781 L 459.421875 303.957031 L 449.734375 303.957031 Z M 449.734375 262.550781 "/><path d="M 464.398438 283.253906 C 464.398438 270.832031 473.339844 261.558594 485.679688 261.558594 C 494.539062 261.558594 501.082031 265.949219 504.226562 273.234375 L 495.53125 276.878906 C 493.628906 272.738281 490.5625 270.171875 485.429688 270.171875 C 478.804688 270.171875 474.25 275.554688 474.25 283.253906 C 474.25 290.871094 478.886719 296.335938 485.679688 296.335938 C 490.730469 296.335938 493.875 293.605469 495.613281 289.714844 L 504.390625 293.441406 C 501.496094 300.0625 494.871094 304.949219 485.511719 304.949219 C 473.175781 304.949219 464.398438 295.675781 464.398438 283.253906 "/><path d="M 508.410156 262.550781 L 518.097656 262.550781 L 518.097656 303.957031 L 508.410156 303.957031 Z M 508.410156 262.550781 "/><path d="M 521.640625 294.019531 L 529.09375 290.625 C 530.75 294.765625 533.648438 297 537.625 297 C 541.761719 297 543.917969 294.765625 543.917969 292.113281 C 543.917969 289.628906 542.425781 287.808594 537.953125 286.152344 L 532.738281 284.164062 C 527.273438 282.09375 524.457031 277.953125 524.457031 272.65625 C 524.457031 266.277344 529.921875 261.558594 537.457031 261.558594 C 543.667969 261.558594 547.808594 264.375 550.210938 269.175781 L 543.003906 273.402344 C 541.847656 270.667969 539.941406 269.175781 537.539062 269.175781 C 535.140625 269.175781 533.398438 270.667969 533.398438 272.820312 C 533.398438 274.808594 534.644531 276.050781 537.375 277.125 L 543.003906 279.28125 C 549.214844 281.597656 552.859375 285.574219 552.859375 292.113281 C 552.859375 299.402344 546.730469 304.949219 537.457031 304.949219 C 529.175781 304.949219 523.960938 300.480469 521.640625 294.019531 "/></g><g class="accent" fill="#F14C33"><path d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/></g><g class="tag" fill="#FFFFFF"><path d="M 314.929688 321.519531 L 316.511719 321.519531 L 316.511719 335.34375 L 314.929688 335.34375 Z M 314.929688 321.519531 "/><path d="M 322.746094 321.519531 L 325.070312 321.519531 L 329.457031 329.632812 L 329.835938 329.632812 L 334.222656 321.519531 L 336.628906 321.519531 L 336.628906 335.34375 L 335.066406 335.34375 L 335.066406 324.527344 L 334.683594 324.527344 L 330.558594 332.519531 L 328.816406 332.519531 L 324.710938 324.527344 L 324.328125 324.527344 L 324.328125 335.34375 L 322.746094 335.34375 Z M 322.746094 321.519531 "/><path d="M 342.910156 321.519531 L 345.234375 321.519531 L 349.621094 329.632812 L 350.003906 329.632812 L 354.390625 321.519531 L 356.792969 321.519531 L 356.792969 335.34375 L 355.230469 335.34375 L 355.230469 324.527344 L 354.851562 324.527344 L 350.722656 332.519531 L 348.980469 332.519531 L 344.875 324.527344 L 344.492188 324.527344 L 344.492188 335.34375 L 342.910156 335.34375 Z M 342.910156 321.519531 "/><path d="M 375.152344 328.433594 C 375.152344 325.449219 372.730469 323.203125 369.542969 323.203125 C 366.359375 323.203125 363.933594 325.449219 363.933594 328.433594 C 363.933594 331.417969 366.359375 333.660156 369.542969 333.660156 C 372.730469 333.660156 375.152344 331.417969 375.152344 328.433594 M 362.3125 328.433594 C 362.3125 324.367188 365.4375 321.28125 369.542969 321.28125 C 373.671875 321.28125 376.777344 324.367188 376.777344 328.433594 C 376.777344 332.5 373.671875 335.582031 369.542969 335.582031 C 365.4375 335.582031 362.3125 332.5 362.3125 328.433594 "/><path d="M 391.808594 331.257812 C 391.808594 329.933594 390.726562 329.015625 389.226562 329.015625 L 383.878906 329.015625 L 383.878906 333.460938 L 389.226562 333.460938 C 390.726562 333.460938 391.808594 332.558594 391.808594 331.257812 M 383.878906 323.40625 L 383.878906 327.351562 L 388.964844 327.351562 C 390.265625 327.351562 391.289062 326.527344 391.289062 325.347656 C 391.289062 324.207031 390.328125 323.40625 388.964844 323.40625 Z M 393.433594 331.617188 C 393.433594 333.761719 391.75 335.34375 389.527344 335.34375 L 382.292969 335.34375 L 382.292969 321.519531 L 389.285156 321.519531 C 391.328125 321.519531 392.890625 322.984375 392.890625 324.988281 C 392.890625 326.347656 392.128906 327.511719 390.949219 328.050781 C 392.449219 328.574219 393.433594 329.976562 393.433594 331.617188 "/><path d="M 398.914062 321.519531 L 400.496094 321.519531 L 400.496094 335.34375 L 398.914062 335.34375 Z M 398.914062 321.519531 "/><path d="M 415.484375 333.460938 L 415.484375 335.34375 L 406.730469 335.34375 L 406.730469 321.519531 L 408.3125 321.519531 L 408.3125 333.460938 Z M 415.484375 333.460938 "/><path d="M 420.371094 321.519531 L 421.953125 321.519531 L 421.953125 335.34375 L 420.371094 335.34375 Z M 420.371094 321.519531 "/><path d="M 437.945312 333.460938 L 437.945312 335.34375 L 428.1875 335.34375 L 428.1875 321.519531 L 437.84375 321.519531 L 437.84375 323.40625 L 429.769531 323.40625 L 429.769531 327.472656 L 437.183594 327.472656 L 437.183594 329.3125 L 429.769531 329.3125 L 429.769531 333.460938 Z M 437.945312 333.460938 "/><path d="M 444.945312 328.550781 L 449.535156 328.550781 C 451.277344 328.550781 452.476562 327.492188 452.476562 325.96875 C 452.476562 324.464844 451.277344 323.40625 449.535156 323.40625 L 444.945312 323.40625 Z M 448.730469 330.433594 L 444.945312 330.433594 L 444.945312 335.34375 L 443.363281 335.34375 L 443.363281 321.519531 L 449.574219 321.519531 C 452.15625 321.519531 454.101562 323.445312 454.101562 325.96875 C 454.101562 328.171875 452.660156 329.894531 450.59375 330.335938 L 454.242188 335.34375 L 452.316406 335.34375 Z M 448.730469 330.433594 "/><path d="M 467.703125 321.519531 L 469.566406 321.519531 L 477.398438 332.257812 L 477.679688 332.257812 L 477.679688 321.519531 L 479.242188 321.519531 L 479.242188 335.34375 L 477.398438 335.34375 L 469.566406 324.605469 L 469.285156 324.605469 L 469.285156 335.34375 L 467.703125 335.34375 Z M 467.703125 321.519531 "/><path d="M 495.28125 333.460938 L 495.28125 335.34375 L 485.523438 335.34375 L 485.523438 321.519531 L 495.179688 321.519531 L 495.179688 323.40625 L 487.109375 323.40625 L 487.109375 327.472656 L 494.519531 327.472656 L 494.519531 329.3125 L 487.109375 329.3125 L 487.109375 333.460938 Z M 495.28125 333.460938 "/><path d="M 500.300781 330.054688 L 500.300781 321.523438 L 501.863281 321.523438 L 501.863281 330.015625 C 501.863281 332.097656 503.605469 333.660156 505.910156 333.660156 C 508.230469 333.660156 509.976562 332.097656 509.976562 330.015625 L 509.976562 321.523438 L 511.539062 321.523438 L 511.539062 330.054688 C 511.539062 333.199219 509.113281 335.585938 505.910156 335.585938 C 502.722656 335.585938 500.300781 333.199219 500.300781 330.054688 "/><path d="M 519.199219 323.40625 L 519.199219 327.570312 L 525.949219 327.570312 L 525.949219 329.453125 L 519.199219 329.453125 L 519.199219 335.34375 L 517.617188 335.34375 L 517.617188 321.523438 L 526.769531 321.523438 L 526.769531 323.40625 Z M 519.199219 323.40625 "/></g></svg></div>
+        <div id="s1-stripe" class="abs">
+          <div style="background: var(--salmon)"></div><div style="background: var(--orange)"></div>
+          <div style="background: var(--navy)"></div><div style="background: var(--white)"></div>
+          <div style="background: var(--celadon)"></div><div style="background: var(--lime)"></div>
+        </div>
+      </section>
+
+      <!-- Scene 2 : qui sommes-nous -->
+      <section id="s2" class="scene clip" data-start="5" data-duration="6.2" data-track-index="0">
+        <div class="ground"></div>
+        <div id="s2-kicker" class="abs">QUI SOMMES-NOUS ?</div>
+        <div id="s2-title" class="abs">
+          <div class="mask"><span class="line light">Le commercialisateur</span></div>
+          <div class="mask"><span class="line">de programmes</span></div>
+          <div class="mask"><span class="line">immobiliers</span></div>
+          <div class="mask"><span class="line"><span class="hl"><span id="s2-hl-bg"></span><span class="hl-text">neufs</span></span></span></div>
+        </div>
+        <div id="s2-sub" class="abs">Le lien entre <b>les promoteurs</b> et <b>vous</b>, partout en France.</div>
+      </section>
+
+      <!-- Scene 3 : habiter / investir -->
+      <section id="s3" class="scene clip" data-start="11.2" data-duration="6.3" data-track-index="0">
+        <div id="s3-top" class="abs">
+          <div class="s3-label">Pour</div>
+          <div class="s3-word">habiter</div>
+          <svg class="s3-icon" viewBox="0 0 120 120">
+            <path id="s3-house" d="M14 58 L60 20 L106 58 M26 49 L26 104 L94 104 L94 49 M50 104 L50 74 L70 74 L70 104" />
+          </svg>
+        </div>
+        <div id="s3-bot" class="abs">
+          <div class="s3-label">Pour</div>
+          <div class="s3-word">investir</div>
+          <svg class="s3-icon" viewBox="0 0 120 120">
+            <path id="s3-chart" d="M12 104 L108 104 M20 86 L46 60 L66 76 L104 36 M82 36 L104 36 L104 58" />
+          </svg>
+        </div>
+        <div id="s3-badge" class="abs">
+          <div class="a">au prix</div>
+          <div class="b">promoteur</div>
+        </div>
+      </section>
+
+      <!-- Scene 4 : accompagnement -->
+      <section id="s4" class="scene clip" data-start="17.5" data-duration="6.5" data-track-index="0">
+        <div class="ground"></div>
+        <div id="s4-title" class="abs">
+          <div class="mask"><span class="t1">Un accompagnement</span></div>
+          <div class="mask"><span class="t2">de <em>A</em> à <em>Z</em></span></div>
+        </div>
+        <div id="s4-line" class="abs"></div>
+        <div id="step1" class="step"><div class="num">01</div><div class="txt">Votre projet de vie</div></div>
+        <div id="step2" class="step"><div class="num">02</div><div class="txt">Le choix du programme</div></div>
+        <div id="step3" class="step"><div class="num">03</div><div class="txt">Le financement</div></div>
+        <div id="step4" class="step"><div class="num">04</div><div class="txt">La remise des clés</div></div>
+      </section>
+
+      <!-- Scene 5 : signature -->
+      <section id="s5" class="scene clip" data-start="24" data-duration="3.4" data-track-index="0">
+        <div class="ground"></div>
+        <svg id="s5-quote-l" class="abs quote" viewBox="0 0 75 65"><path transform="translate(6,2) scale(2) rotate(90) translate(-360.6,-258)" d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/><path transform="translate(40,2) scale(2) rotate(90) translate(-360.6,-258)" d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/></svg>
+        <svg id="s5-quote-r" class="abs quote" viewBox="0 0 75 65"><path transform="translate(6,2) scale(2) rotate(90) translate(-360.6,-258)" d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/><path transform="translate(40,2) scale(2) rotate(90) translate(-360.6,-258)" d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/></svg>
+        <div id="s5-l1" class="abs">Osez dire</div>
+        <div id="s5-oui" class="abs"><img src="assets/brush-oui.png" alt="oui" /></div>
+        <div id="s5-l2" class="abs">à l’immobilier</div>
+        <div id="s5-neuf" class="abs"><img src="assets/brush-neuf.png" alt="neuf !" /></div>
+      </section>
+
+      <!-- Scene 6 : logo final -->
+      <section id="s6" class="scene clip" data-start="27.4" data-duration="2.6" data-track-index="0">
+        <div class="ground"></div>
+        <div id="s6-logo" class="abs"><svg viewBox="284 236 268 104" aria-label="médicis immobilier neuf"><g class="word" fill="#FFFFFF"><path d="M 454.214844 244.589844 L 454.855469 244.589844 C 457.847656 244.589844 460.273438 247.015625 460.273438 250.007812 C 460.273438 253 457.847656 255.429688 454.855469 255.429688 L 454.214844 255.429688 C 451.222656 255.429688 448.796875 253 448.796875 250.007812 C 448.796875 247.015625 451.222656 244.589844 454.214844 244.589844 "/><path d="M 512.894531 244.589844 L 513.53125 244.589844 C 516.523438 244.589844 518.949219 247.015625 518.949219 250.007812 C 518.949219 253 516.523438 255.429688 513.53125 255.429688 L 512.894531 255.429688 C 509.898438 255.429688 507.472656 253 507.472656 250.007812 C 507.472656 247.015625 509.898438 244.589844 512.894531 244.589844 "/><path d="M 288.921875 262.550781 L 297.203125 262.550781 L 298.277344 268.679688 C 300.429688 264.789062 305.066406 261.558594 310.78125 261.558594 C 315.832031 261.558594 320.136719 263.546875 322.707031 268.679688 C 325.6875 264.042969 330.40625 261.558594 335.707031 261.558594 C 344.566406 261.558594 350.613281 267.273438 350.613281 278.203125 L 350.613281 303.957031 L 340.921875 303.957031 L 340.921875 279.28125 C 340.921875 273.152344 338.109375 270.253906 333.886719 270.253906 C 328.832031 270.253906 324.609375 274.726562 324.609375 284 L 324.609375 303.957031 L 314.921875 303.957031 L 314.921875 279.28125 C 314.921875 273.152344 312.105469 270.253906 307.882812 270.253906 C 302.914062 270.253906 298.609375 274.726562 298.609375 284.414062 L 298.609375 303.957031 L 288.921875 303.957031 Z M 288.921875 262.550781 "/><path d="M 365.179688 278.949219 L 386.789062 278.949219 C 386.046875 272.902344 381.738281 269.59375 376.191406 269.59375 C 371.058594 269.59375 366.421875 272.324219 365.179688 278.949219 M 376.273438 304.949219 C 363.523438 304.949219 355.488281 295.839844 355.488281 283.335938 C 355.488281 270.585938 363.851562 261.558594 376.191406 261.558594 C 389.605469 261.558594 396.5625 271.082031 396.5625 282.09375 C 396.5625 283.253906 396.480469 284.746094 396.230469 285.820312 L 365.011719 285.820312 C 366.003906 293.273438 370.726562 296.421875 376.855469 296.421875 C 382.070312 296.421875 385.21875 293.855469 387.121094 290.210938 L 395.15625 293.9375 C 392.089844 300.480469 385.714844 304.949219 376.273438 304.949219 "/><path d="M 408.941406 283.253906 C 408.941406 290.871094 414.074219 296.335938 421.03125 296.335938 C 427.90625 296.335938 432.957031 291.039062 432.957031 283.253906 C 432.957031 275.472656 427.90625 270.171875 421.03125 270.171875 C 414.074219 270.171875 408.941406 275.636719 408.941406 283.253906 M 419.128906 304.949219 C 407.949219 304.949219 399.171875 296.089844 399.171875 283.253906 C 399.171875 269.921875 408.527344 261.558594 419.457031 261.558594 C 425.75 261.558594 430.304688 264.625 432.375 267.6875 L 432.375 244.75 L 442.0625 244.75 L 442.0625 303.957031 L 433.785156 303.957031 L 432.707031 298.324219 C 430.472656 301.804688 425.335938 304.949219 419.128906 304.949219 "/><path d="M 449.734375 262.550781 L 459.421875 262.550781 L 459.421875 303.957031 L 449.734375 303.957031 Z M 449.734375 262.550781 "/><path d="M 464.398438 283.253906 C 464.398438 270.832031 473.339844 261.558594 485.679688 261.558594 C 494.539062 261.558594 501.082031 265.949219 504.226562 273.234375 L 495.53125 276.878906 C 493.628906 272.738281 490.5625 270.171875 485.429688 270.171875 C 478.804688 270.171875 474.25 275.554688 474.25 283.253906 C 474.25 290.871094 478.886719 296.335938 485.679688 296.335938 C 490.730469 296.335938 493.875 293.605469 495.613281 289.714844 L 504.390625 293.441406 C 501.496094 300.0625 494.871094 304.949219 485.511719 304.949219 C 473.175781 304.949219 464.398438 295.675781 464.398438 283.253906 "/><path d="M 508.410156 262.550781 L 518.097656 262.550781 L 518.097656 303.957031 L 508.410156 303.957031 Z M 508.410156 262.550781 "/><path d="M 521.640625 294.019531 L 529.09375 290.625 C 530.75 294.765625 533.648438 297 537.625 297 C 541.761719 297 543.917969 294.765625 543.917969 292.113281 C 543.917969 289.628906 542.425781 287.808594 537.953125 286.152344 L 532.738281 284.164062 C 527.273438 282.09375 524.457031 277.953125 524.457031 272.65625 C 524.457031 266.277344 529.921875 261.558594 537.457031 261.558594 C 543.667969 261.558594 547.808594 264.375 550.210938 269.175781 L 543.003906 273.402344 C 541.847656 270.667969 539.941406 269.175781 537.539062 269.175781 C 535.140625 269.175781 533.398438 270.667969 533.398438 272.820312 C 533.398438 274.808594 534.644531 276.050781 537.375 277.125 L 543.003906 279.28125 C 549.214844 281.597656 552.859375 285.574219 552.859375 292.113281 C 552.859375 299.402344 546.730469 304.949219 537.457031 304.949219 C 529.175781 304.949219 523.960938 300.480469 521.640625 294.019531 "/></g><g class="accent" fill="#F14C33"><path d="M 390.8125 248.855469 L 386.6875 241.753906 C 376.203125 247.839844 363.46875 249.449219 360.59375 249.742188 L 360.59375 257.992188 C 361.292969 257.941406 377.308594 256.695312 390.8125 248.855469 "/></g><g class="tag" fill="#FFFFFF"><path d="M 314.929688 321.519531 L 316.511719 321.519531 L 316.511719 335.34375 L 314.929688 335.34375 Z M 314.929688 321.519531 "/><path d="M 322.746094 321.519531 L 325.070312 321.519531 L 329.457031 329.632812 L 329.835938 329.632812 L 334.222656 321.519531 L 336.628906 321.519531 L 336.628906 335.34375 L 335.066406 335.34375 L 335.066406 324.527344 L 334.683594 324.527344 L 330.558594 332.519531 L 328.816406 332.519531 L 324.710938 324.527344 L 324.328125 324.527344 L 324.328125 335.34375 L 322.746094 335.34375 Z M 322.746094 321.519531 "/><path d="M 342.910156 321.519531 L 345.234375 321.519531 L 349.621094 329.632812 L 350.003906 329.632812 L 354.390625 321.519531 L 356.792969 321.519531 L 356.792969 335.34375 L 355.230469 335.34375 L 355.230469 324.527344 L 354.851562 324.527344 L 350.722656 332.519531 L 348.980469 332.519531 L 344.875 324.527344 L 344.492188 324.527344 L 344.492188 335.34375 L 342.910156 335.34375 Z M 342.910156 321.519531 "/><path d="M 375.152344 328.433594 C 375.152344 325.449219 372.730469 323.203125 369.542969 323.203125 C 366.359375 323.203125 363.933594 325.449219 363.933594 328.433594 C 363.933594 331.417969 366.359375 333.660156 369.542969 333.660156 C 372.730469 333.660156 375.152344 331.417969 375.152344 328.433594 M 362.3125 328.433594 C 362.3125 324.367188 365.4375 321.28125 369.542969 321.28125 C 373.671875 321.28125 376.777344 324.367188 376.777344 328.433594 C 376.777344 332.5 373.671875 335.582031 369.542969 335.582031 C 365.4375 335.582031 362.3125 332.5 362.3125 328.433594 "/><path d="M 391.808594 331.257812 C 391.808594 329.933594 390.726562 329.015625 389.226562 329.015625 L 383.878906 329.015625 L 383.878906 333.460938 L 389.226562 333.460938 C 390.726562 333.460938 391.808594 332.558594 391.808594 331.257812 M 383.878906 323.40625 L 383.878906 327.351562 L 388.964844 327.351562 C 390.265625 327.351562 391.289062 326.527344 391.289062 325.347656 C 391.289062 324.207031 390.328125 323.40625 388.964844 323.40625 Z M 393.433594 331.617188 C 393.433594 333.761719 391.75 335.34375 389.527344 335.34375 L 382.292969 335.34375 L 382.292969 321.519531 L 389.285156 321.519531 C 391.328125 321.519531 392.890625 322.984375 392.890625 324.988281 C 392.890625 326.347656 392.128906 327.511719 390.949219 328.050781 C 392.449219 328.574219 393.433594 329.976562 393.433594 331.617188 "/><path d="M 398.914062 321.519531 L 400.496094 321.519531 L 400.496094 335.34375 L 398.914062 335.34375 Z M 398.914062 321.519531 "/><path d="M 415.484375 333.460938 L 415.484375 335.34375 L 406.730469 335.34375 L 406.730469 321.519531 L 408.3125 321.519531 L 408.3125 333.460938 Z M 415.484375 333.460938 "/><path d="M 420.371094 321.519531 L 421.953125 321.519531 L 421.953125 335.34375 L 420.371094 335.34375 Z M 420.371094 321.519531 "/><path d="M 437.945312 333.460938 L 437.945312 335.34375 L 428.1875 335.34375 L 428.1875 321.519531 L 437.84375 321.519531 L 437.84375 323.40625 L 429.769531 323.40625 L 429.769531 327.472656 L 437.183594 327.472656 L 437.183594 329.3125 L 429.769531 329.3125 L 429.769531 333.460938 Z M 437.945312 333.460938 "/><path d="M 444.945312 328.550781 L 449.535156 328.550781 C 451.277344 328.550781 452.476562 327.492188 452.476562 325.96875 C 452.476562 324.464844 451.277344 323.40625 449.535156 323.40625 L 444.945312 323.40625 Z M 448.730469 330.433594 L 444.945312 330.433594 L 444.945312 335.34375 L 443.363281 335.34375 L 443.363281 321.519531 L 449.574219 321.519531 C 452.15625 321.519531 454.101562 323.445312 454.101562 325.96875 C 454.101562 328.171875 452.660156 329.894531 450.59375 330.335938 L 454.242188 335.34375 L 452.316406 335.34375 Z M 448.730469 330.433594 "/><path d="M 467.703125 321.519531 L 469.566406 321.519531 L 477.398438 332.257812 L 477.679688 332.257812 L 477.679688 321.519531 L 479.242188 321.519531 L 479.242188 335.34375 L 477.398438 335.34375 L 469.566406 324.605469 L 469.285156 324.605469 L 469.285156 335.34375 L 467.703125 335.34375 Z M 467.703125 321.519531 "/><path d="M 495.28125 333.460938 L 495.28125 335.34375 L 485.523438 335.34375 L 485.523438 321.519531 L 495.179688 321.519531 L 495.179688 323.40625 L 487.109375 323.40625 L 487.109375 327.472656 L 494.519531 327.472656 L 494.519531 329.3125 L 487.109375 329.3125 L 487.109375 333.460938 Z M 495.28125 333.460938 "/><path d="M 500.300781 330.054688 L 500.300781 321.523438 L 501.863281 321.523438 L 501.863281 330.015625 C 501.863281 332.097656 503.605469 333.660156 505.910156 333.660156 C 508.230469 333.660156 509.976562 332.097656 509.976562 330.015625 L 509.976562 321.523438 L 511.539062 321.523438 L 511.539062 330.054688 C 511.539062 333.199219 509.113281 335.585938 505.910156 335.585938 C 502.722656 335.585938 500.300781 333.199219 500.300781 330.054688 "/><path d="M 519.199219 323.40625 L 519.199219 327.570312 L 525.949219 327.570312 L 525.949219 329.453125 L 519.199219 329.453125 L 519.199219 335.34375 L 517.617188 335.34375 L 517.617188 321.523438 L 526.769531 321.523438 L 526.769531 323.40625 Z M 519.199219 323.40625 "/></g></svg></div>
+        <div id="s6-rule" class="abs"></div>
+        <div id="s6-url" class="abs">medicis-patrimoine.com</div>
+        <div id="s6-stripe" class="abs">
+          <div style="background: var(--salmon)"></div><div style="background: var(--orange)"></div>
+          <div style="background: var(--navy)"></div><div style="background: var(--white)"></div>
+          <div style="background: var(--celadon)"></div><div style="background: var(--lime)"></div>
+        </div>
+      </section>
+
+      <!-- Transitions : balayages aux couleurs de la charte -->
+      <div id="wipes" class="clip" data-start="0" data-duration="30" data-track-index="1">
+        <div class="wipe" id="w1"><div class="bar" style="background: var(--lime)"></div><div class="bar" style="background: var(--celadon)"></div><div class="bar" style="background: var(--white)"></div></div>
+        <div class="wipe" id="w2"><div class="bar" style="background: var(--orange)"></div><div class="bar" style="background: var(--lime)"></div><div class="bar" style="background: var(--celadon)"></div></div>
+        <div class="wipe" id="w3"><div class="bar" style="background: var(--lime)"></div><div class="bar" style="background: var(--salmon)"></div><div class="bar" style="background: var(--blue)"></div></div>
+        <div class="wipe" id="w4"><div class="bar" style="background: var(--celadon)"></div><div class="bar" style="background: var(--orange)"></div><div class="bar" style="background: var(--white)"></div></div>
+        <div class="wipe" id="w5"><div class="bar" style="background: var(--orange)"></div><div class="bar" style="background: var(--lime)"></div><div class="bar" style="background: var(--blue)"></div></div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      // Transition helper: three palette bars sweep across, covering the cut at time t.
+      function wipe(id, t, dir) {
+        const bars = gsap.utils.toArray(`#${id} .bar`);
+        const from = dir === "up" ? { yPercent: 100 } : { xPercent: -100 };
+        const mid = dir === "up" ? { yPercent: 0 } : { xPercent: 0 };
+        const out = dir === "up" ? { yPercent: -100 } : { xPercent: 100 };
+        bars.forEach((b, i) => {
+          tl.fromTo(b, from, { ...mid, duration: 0.42, ease: "power3.in" }, t - 0.5 + i * 0.07);
+          tl.to(b, { ...out, duration: 0.45, ease: "power3.out" }, t + 0.02 + i * 0.07);
+        });
+      }
+
+      // ---------- Scene 1 (0 – 5) ----------
+      tl.fromTo("#s1-stripe div", { yPercent: 100 }, { yPercent: 0, duration: 0.5, stagger: 0.06 }, 0.2);
+      tl.fromTo("#s1-logo .word", { clipPath: "inset(100% 0% 0% 0%)", y: 40 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 0.9 }, 0.5);
+      tl.fromTo("#s1-logo .accent", { scaleX: 0, transformOrigin: "100% 50%", rotate: -12 }, { scaleX: 1, rotate: 0, duration: 0.6, ease: "back.out(2.2)" }, 1.25);
+      tl.fromTo("#s1-logo .tag", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, 1.6);
+      tl.fromTo("#s1-logo", { scale: 0.96 }, { scale: 1.03, duration: 4.4, ease: "none" }, 0.5);
+
+      // ---------- Scene 2 (5 – 11.2) ----------
+      wipe("w1", 5, "x");
+      tl.fromTo("#s2-kicker", { scale: 0, transformOrigin: "0% 50%" }, { scale: 1, duration: 0.5, ease: "back.out(2)" }, 5.25);
+      tl.fromTo("#s2-title .mask > span", { yPercent: 105 }, { yPercent: 0, duration: 0.7, stagger: 0.16 }, 5.45);
+      tl.fromTo("#s2-hl-bg", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.55, ease: "power2.inOut" }, 6.35);
+      tl.fromTo("#s2-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 7.3);
+      tl.fromTo("#s2-title", { x: 0 }, { x: -18, duration: 5.5, ease: "none" }, 5.4);
+
+      // ---------- Scene 3 (11.2 – 17.5) ----------
+      wipe("w2", 11.2, "up");
+      tl.fromTo("#s3-top .s3-word", { xPercent: -110, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.7 }, 11.45);
+      tl.fromTo("#s3-top .s3-label", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, 11.4);
+      tl.fromTo("#s3-house", { strokeDasharray: 420, strokeDashoffset: 420 }, { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut" }, 11.6);
+      tl.fromTo("#s3-bot .s3-word", { xPercent: -110, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.7 }, 12.5);
+      tl.fromTo("#s3-bot .s3-label", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, 12.45);
+      tl.fromTo("#s3-chart", { strokeDasharray: 340, strokeDashoffset: 340 }, { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut" }, 12.65);
+      tl.fromTo("#s3-badge", { scale: 0, rotate: -20 }, { scale: 1, rotate: -8, duration: 0.7, ease: "back.out(1.8)" }, 14.0);
+      tl.to("#s3-badge", { y: -10, duration: 2.6, ease: "sine.inOut" }, 14.7);
+
+      // ---------- Scene 4 (17.5 – 24) ----------
+      wipe("w3", 17.5, "x");
+      tl.fromTo("#s4-title .mask > span", { yPercent: 105 }, { yPercent: 0, duration: 0.7, stagger: 0.18 }, 17.75);
+      tl.fromTo("#s4-line", { scaleY: 0 }, { scaleY: 1, duration: 2.6, ease: "power1.inOut" }, 18.6);
+      ["#step1", "#step2", "#step3", "#step4"].forEach((s, i) => {
+        const t = 18.7 + i * 0.75;
+        tl.fromTo(`${s} .num`, { scale: 0 }, { scale: 1, duration: 0.45, ease: "back.out(2.2)" }, t);
+        tl.fromTo(`${s} .txt`, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.55 }, t + 0.12);
+      });
+
+      // ---------- Scene 5 (24 – 27.4) ----------
+      wipe("w4", 24, "up");
+      tl.fromTo("#s5-quote-l", { scale: 0, transformOrigin: "100% 100%" }, { scale: 1, duration: 0.5, ease: "back.out(2)" }, 24.2);
+      tl.fromTo("#s5-l1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 24.3);
+      tl.fromTo("#s5-oui", { clipPath: "inset(0% 100% 0% 0%)", scale: 1.15 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.6, ease: "power2.out" }, 24.75);
+      tl.fromTo("#s5-l2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 25.3);
+      tl.fromTo("#s5-neuf", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.65, ease: "power2.out" }, 25.75);
+      tl.fromTo("#s5-quote-r", { scale: 0, transformOrigin: "0% 0%" }, { scale: 1, duration: 0.5, ease: "back.out(2)" }, 26.1);
+
+      // ---------- Scene 6 (27.4 – 30) ----------
+      wipe("w5", 27.4, "x");
+      tl.fromTo("#s6-logo", { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8 }, 27.55);
+      tl.fromTo("#s6-logo .accent", { scaleX: 0, transformOrigin: "100% 50%" }, { scaleX: 1, duration: 0.5, ease: "back.out(2.2)" }, 27.95);
+      tl.fromTo("#s6-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 28.2);
+      tl.fromTo("#s6-url", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 28.35);
+      tl.fromTo("#s6-stripe div", { yPercent: 100 }, { yPercent: 0, duration: 0.5, stagger: 0.05 }, 28.3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
