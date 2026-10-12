@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Poppins"; font-weight: 300; src: url("assets/fonts/poppins-latin-300-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 400; src: url("assets/fonts/poppins-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 500; src: url("assets/fonts/poppins-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 600; src: url("assets/fonts/poppins-latin-600-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 700; src: url("assets/fonts/poppins-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Poppins"; font-weight: 800; src: url("assets/fonts/poppins-latin-800-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Caveat Brush"; font-weight: 400; src: url("assets/fonts/caveat-brush-latin-400-normal.woff2") format("woff2"); }
+
+      :root {
+        --blue: #2555ad;
+        --blue-deep: #1b4294;
+        --teal: #1480b6;
+        --coral: #f2523f;
+        --lime: #d4e733;
+        --glass: rgba(255, 255, 255, 0.08);
+        --line: rgba(255, 255, 255, 0.3);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--blue); }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--blue);
+        font-family: "Poppins", sans-serif;
+        color: #fff;
+      }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .abs { position: absolute; }
+      b, strong { font-weight: 700; }
+      .mask { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.04em; }
+      .mask > span { display: inline-block; }
+      .legal {
+        position: absolute;
+        font-size: 18px;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        color: rgba(255, 255, 255, 0.78);
+        text-shadow: 0 1px 6px rgba(10, 25, 70, 0.6);
+        white-space: nowrap;
+      }
+
+      /* ---------- Badge « m » ---------- */
+      #badge {
+        position: absolute;
+        right: 28px;
+        bottom: 24px;
+        width: 50px;
+        height: 50px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1;
+        padding-bottom: 6px;
+        color: rgba(255, 255, 255, 0.92);
+        z-index: 50;
+      }
+
+      /* ---------- Plan 1 ---------- */
+      #s1 { z-index: 1; background: var(--teal); }
+      #s1-sky {
+        position: absolute; inset: 0;
+        background: radial-gradient(1200px 500px at 50% 0%, #1d97cf 0%, var(--teal) 60%, #106fa3 100%);
+      }
+      #s1-dome {
+        position: absolute;
+        left: -1040px;
+        top: 150px;
+        width: 4000px;
+        height: 3200px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side at 50% 30%, #2d63c2 0%, var(--blue) 55%, var(--blue-deep) 100%);
+        box-shadow: 0 -18px 60px rgba(8, 40, 110, 0.35);
+      }
+      #s1-swoosh { position: absolute; left: 720px; top: 690px; width: 520px; height: 220px; overflow: visible; }
+
+      /* ---------- Titre persistant ---------- */
+      #title {
+        position: absolute;
+        left: 0; right: 0;
+        top: 330px;
+        height: 420px;
+        display: flex;
+        justify-content: center;
+        z-index: 3;
+      }
+      #title-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      #t-l1 { font-size: 66px; font-weight: 300; line-height: 1.12; letter-spacing: -0.005em; }
+      #t-l2 { font-size: 118px; font-weight: 800; line-height: 1.04; letter-spacing: -0.02em; }
+      #t-l3 { font-size: 66px; font-weight: 700; line-height: 1.18; position: relative; }
+      #t-l2 .ch { display: inline-block; }
+      #rer { position: relative; display: inline-block; }
+      #rer-scribble { position: absolute; left: -8%; width: 120%; bottom: -26px; height: 40px; overflow: visible; }
+
+      /* ---------- Plan 2 ---------- */
+      #s2 { z-index: 2; opacity: 0; }
+      #s2-panel {
+        position: absolute;
+        left: 500px; top: 252px;
+        width: 920px; height: 560px;
+        border-radius: 58px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 70%, rgba(255, 255, 255, 0.02) 100%);
+        box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.08), 0 40px 90px rgba(9, 30, 90, 0.35);
+      }
+      #s2-tags { position: absolute; left: 1418px; top: 455px; width: 260px; height: 160px; overflow: hidden; }
+      .tag {
+        position: absolute;
+        left: 0;
+        height: 52px;
+        padding: 0 30px 0 24px;
+        border-radius: 0 26px 26px 0;
+        background: var(--coral);
+        font-size: 26px;
+        font-weight: 500;
+        line-height: 52px;
+        white-space: nowrap;
+        box-shadow: 0 10px 24px rgba(120, 20, 10, 0.25);
+      }
+      #s2-pills { position: absolute; left: 550px; top: 300px; width: 820px; display: flex; flex-direction: column; gap: 24px; }
+      .pill {
+        height: 88px;
+        border-radius: 44px;
+        border: 2px solid rgba(255, 255, 255, 0.32);
+        background: rgba(255, 255, 255, 0.07);
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 0 28px 0 14px;
+        font-size: 28px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+      .check {
+        width: 60px; height: 60px; border-radius: 50%;
+        background: var(--coral);
+        display: flex; align-items: center; justify-content: center;
+        flex: 0 0 auto;
+        box-shadow: 0 6px 16px rgba(120, 20, 10, 0.3);
+      }
+      .check svg { width: 34px; height: 34px; }
+      #s2-art { position: absolute; left: 430px; top: 620px; width: 1060px; height: 400px; overflow: visible; }
+      #s2-ground { position: absolute; left: 150px; top: 998px; width: 1620px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.85); }
+
+      /* ---------- Transitions ---------- */
+      .edge {
+        position: absolute;
+        top: -110px;
+        width: 30px;
+        height: 1300px;
+        background: var(--coral);
+        transform-origin: 50% 50%;
+        box-shadow: 0 0 40px rgba(242, 82, 63, 0.45);
+        opacity: 0;
+      }
+      #edge-a { z-index: 5; }
+      #edge-b { z-index: 8; }
+      #wipe { position: absolute; inset: 0; z-index: 6; }
+      .wipe-band { position: absolute; left: 0; width: 1920px; height: 640px; overflow: visible; clip-path: inset(0% 100% 0% 0% round 0px 260px 260px 0px); }
+      .reveal { clip-path: inset(0% 100% 0% 0% round 0px 80px 80px 0px); }
+
+      /* ---------- Plan 3 ---------- */
+      #s3 { z-index: 4; opacity: 0; background: #0f2c56; clip-path: polygon(2560px 0px, 2700px 0px, 2700px 1080px, 1960px 1080px); }
+      #world { position: absolute; left: 0; top: 0; width: 3840px; height: 2160px; transform-origin: 0 0; overflow: visible; }
+      #s3-tri {
+        position: absolute; left: 0; top: 0; width: 1320px; height: 1080px;
+        clip-path: polygon(0px 0px, 1320px 0px, 0px 1080px);
+        background: linear-gradient(135deg, rgba(37, 85, 173, 0.98) 0%, rgba(37, 85, 173, 0.94) 45%, rgba(30, 78, 165, 0.8) 100%);
+      }
+      #s3-tri-glow {
+        position: absolute; left: 0; top: 0; width: 1320px; height: 1080px;
+        clip-path: polygon(1320px 0px, 1350px 0px, 30px 1080px, 0px 1080px);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.35));
+      }
+      #s3-city { position: absolute; left: 64px; top: 58px; font-size: 62px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+      #s3-list { position: absolute; left: 64px; top: 170px; display: flex; flex-direction: column; gap: 14px; }
+      .loc { display: flex; align-items: center; gap: 18px; font-size: 30px; font-weight: 300; white-space: nowrap; height: 52px; }
+      .loc b { font-weight: 700; }
+      .loc-ic {
+        width: 52px; height: 52px; border-radius: 50%;
+        background: #fff; color: var(--blue);
+        display: flex; align-items: center; justify-content: center;
+        flex: 0 0 auto;
+      }
+      .loc-ic svg { width: 30px; height: 30px; }
+      #s3-legal { left: 40px; bottom: 30px; }
+
+      /* ---------- Plan 4 ---------- */
+      #s4 { z-index: 5; opacity: 0; background: var(--blue); }
+      .ghost { position: absolute; overflow: visible; filter: grayscale(1) brightness(2.4); opacity: 0.12; }
+      #s4-ghost { left: -260px; top: 230px; width: 2440px; height: 920px; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(1300px 800px at 50% 45%, rgba(37, 85, 173, 0) 0%, rgba(20, 52, 128, 0.55) 100%); }
+      #s4-head { position: absolute; left: 0; right: 0; top: 120px; display: flex; flex-direction: column; align-items: center; }
+      #s4-livraison { font-size: 108px; font-weight: 300; line-height: 1.1; letter-spacing: 0; }
+      #s4-script-wrap { position: relative; width: 820px; height: 190px; margin-top: 4px; }
+      #s4-brush { position: absolute; left: 30px; top: 10px; width: 760px; height: 180px; overflow: visible; }
+      #s4-script {
+        position: absolute; left: 0; right: 0; top: -14px;
+        text-align: center;
+        font-family: "Caveat Brush", "Poppins", cursive;
+        font-size: 176px;
+        line-height: 1;
+        color: #fff;
+        text-shadow: 0 6px 18px rgba(110, 18, 8, 0.35);
+      }
+      #s4-cards { position: absolute; left: 240px; top: 575px; width: 1440px; display: flex; gap: 60px; }
+      .card {
+        width: 440px; height: 330px;
+        border-radius: 36px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(160deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.05) 100%);
+        box-shadow: 0 30px 70px rgba(8, 28, 85, 0.35), inset 0 0 40px rgba(255, 255, 255, 0.06);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
+        text-align: center;
+      }
+      .card-ic {
+        width: 128px; height: 128px; border-radius: 50%;
+        background: var(--coral);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 14px 30px rgba(120, 20, 10, 0.3);
+      }
+      .card-ic svg { width: 70px; height: 70px; }
+      .card-tx { font-size: 32px; line-height: 1.22; font-weight: 300; }
+      .card-tx b { display: block; font-weight: 700; font-size: 34px; }
+      #s4-legal { left: 40px; bottom: 30px; }
+
+      /* ---------- Plan 5 ---------- */
+      #s5 { z-index: 7; opacity: 0; background: var(--blue); clip-path: polygon(-700px 0px, -100px 0px, -700px 1080px, -700px 1080px); }
+      #s5-inner { position: absolute; inset: 0; }
+      #s5-ghost { left: -900px; top: 60px; width: 3600px; height: 1360px; opacity: 0.1; }
+      #s5-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(27, 66, 148, 0.2) 0%, rgba(27, 66, 148, 0.55) 100%); }
+      #s5-text { position: absolute; left: 0; right: 0; top: 330px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+      #s5-flourish { width: 300px; height: 110px; overflow: visible; margin-bottom: 18px; margin-left: 120px; }
+      #s5-l1 { font-size: 62px; font-weight: 300; line-height: 1.2; }
+      #s5-l2 { font-size: 116px; font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; position: relative; }
+      #s5-l2 .w { display: inline-block; }
+      #s5-ou { font-weight: 300; font-size: 96px; }
+      #s5-underline { position: absolute; left: 4%; width: 92%; bottom: -30px; height: 46px; overflow: visible; }
+
+      /* ---------- Plan 6 ---------- */
+      #s6 { z-index: 9; opacity: 0; background: var(--blue); }
+      #s6-inner { position: absolute; inset: 0; }
+      .blob { position: absolute; border-radius: 50%; filter: blur(70px); }
+      #s6-blob1 { left: 980px; top: -260px; width: 1100px; height: 900px; background: rgba(29, 151, 207, 0.55); }
+      #s6-blob2 { left: -240px; top: 520px; width: 1000px; height: 800px; background: rgba(60, 110, 215, 0.6); }
+      #s6-blob3 { left: 1250px; top: 640px; width: 800px; height: 600px; background: rgba(20, 50, 130, 0.65); }
+      #s6-head { position: absolute; left: 0; right: 0; top: 128px; text-align: center; font-size: 56px; font-weight: 300; white-space: nowrap; }
+      #s6-head b { font-weight: 700; }
+      .s6-label { position: absolute; font-size: 32px; font-weight: 300; white-space: nowrap; }
+      #s6-l-web { left: 556px; top: 322px; }
+      #s6-l-tel { right: 104px; top: 628px; }
+      .cta-pill {
+        position: absolute;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: -11px 11px 0 var(--coral);
+        color: var(--coral);
+        display: flex; align-items: center;
+        white-space: nowrap;
+      }
+      #s6-web { left: 528px; top: 378px; width: 820px; height: 124px; padding-left: 44px; font-size: 50px; font-weight: 500; }
+      #s6-web-caret { display: inline-block; width: 4px; height: 56px; background: var(--coral); margin-left: 4px; }
+      #s6-tel { right: 96px; top: 688px; width: 800px; height: 156px; justify-content: center; font-size: 92px; font-weight: 500; letter-spacing: 0.01em; }
+      .dg { display: inline-block; height: 110px; overflow: hidden; vertical-align: middle; }
+      .dg-col { display: block; }
+      .dg-col span { display: block; height: 110px; line-height: 110px; text-align: center; }
+      .dg-sp { display: inline-block; width: 0.32em; }
+      #s6-person { position: absolute; left: 30px; bottom: -112px; width: 648px; height: 694px; transform-origin: 50% 100%; }
+      #s6-person img { width: 100%; height: 100%; display: block; }
+      #s6-legal { right: 104px; bottom: 34px; font-size: 18px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080">
+      <!-- Définitions partagées : illustration de la résidence (non contractuelle), dégradés -->
+      <svg width="0" height="0" style="position: absolute">
+        <defs>
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2c3b55" />
+            <stop offset="0.55" stop-color="#58799f" />
+            <stop offset="1" stop-color="#2c3b55" />
+          </linearGradient>
+          <linearGradient id="mapgrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0d2850" />
+            <stop offset="1" stop-color="#143c72" />
+          </linearGradient>
+          <symbol id="res-building" viewBox="0 0 900 380">
+            <!-- volume A -->
+            <rect x="60" y="150" width="270" height="230" fill="#efe5d5" />
+            <rect x="56" y="141" width="278" height="11" fill="#ffffff" />
+            <rect x="300" y="150" width="30" height="230" fill="#dccdb6" />
+            <g fill="url(#glass)" stroke="#2b3445" stroke-width="2">
+              <rect x="86" y="176" width="44" height="52" /><rect x="156" y="176" width="44" height="52" /><rect x="226" y="176" width="44" height="52" />
+              <rect x="86" y="246" width="44" height="52" /><rect x="156" y="246" width="44" height="52" /><rect x="226" y="246" width="44" height="52" />
+              <rect x="86" y="316" width="44" height="52" /><rect x="156" y="316" width="44" height="52" /><rect x="226" y="316" width="44" height="52" />
+            </g>
+            <g fill="rgba(185,215,245,0.55)" stroke="#ffffff" stroke-width="2">
+              <rect x="146" y="212" width="64" height="20" /><rect x="146" y="282" width="64" height="20" /><rect x="216" y="282" width="64" height="20" />
+            </g>
+            <!-- volume B -->
+            <rect x="330" y="70" width="280" height="310" fill="#fbf8f3" />
+            <rect x="326" y="61" width="288" height="11" fill="#ffffff" />
+            <rect x="552" y="70" width="58" height="310" fill="#c9976a" />
+            <g stroke="#ad7c52" stroke-width="2"><line x1="564" y1="70" x2="564" y2="380" /><line x1="576" y1="70" x2="576" y2="380" /><line x1="588" y1="70" x2="588" y2="380" /><line x1="600" y1="70" x2="600" y2="380" /></g>
+            <g fill="url(#glass)" stroke="#2b3445" stroke-width="2">
+              <rect x="356" y="92" width="70" height="56" /><rect x="446" y="92" width="70" height="56" />
+              <rect x="356" y="162" width="70" height="56" /><rect x="446" y="162" width="70" height="56" />
+              <rect x="356" y="232" width="70" height="56" /><rect x="446" y="232" width="70" height="56" />
+              <rect x="356" y="302" width="70" height="56" />
+            </g>
+            <g fill="rgba(185,215,245,0.5)" stroke="#ffffff" stroke-width="2">
+              <rect x="440" y="132" width="82" height="20" /><rect x="440" y="202" width="82" height="20" /><rect x="440" y="272" width="82" height="20" />
+            </g>
+            <rect x="456" y="310" width="88" height="8" fill="#2b3445" />
+            <rect x="470" y="318" width="60" height="62" fill="#3b5272" />
+            <rect x="340" y="44" width="200" height="18" fill="rgba(185,215,245,0.4)" stroke="#ffffff" stroke-width="1.5" />
+            <g fill="#5ba548"><circle cx="360" cy="56" r="10" /><circle cx="382" cy="52" r="12" /><circle cx="406" cy="57" r="9" /><circle cx="512" cy="54" r="11" /><circle cx="532" cy="58" r="8" /></g>
+            <!-- volume C -->
+            <rect x="610" y="170" width="250" height="210" fill="#efe5d5" />
+            <rect x="606" y="161" width="258" height="11" fill="#ffffff" />
+            <rect x="832" y="170" width="28" height="210" fill="#dccdb6" />
+            <g fill="url(#glass)" stroke="#2b3445" stroke-width="2">
+              <rect x="636" y="194" width="42" height="48" /><rect x="706" y="194" width="42" height="48" /><rect x="776" y="194" width="42" height="48" />
+              <rect x="636" y="262" width="42" height="48" /><rect x="706" y="262" width="42" height="48" /><rect x="776" y="262" width="42" height="48" />
+              <rect x="636" y="324" width="42" height="48" /><rect x="706" y="324" width="42" height="48" /><rect x="776" y="324" width="42" height="48" />
+            </g>
+            <g fill="rgba(185,215,245,0.55)" stroke="#ffffff" stroke-width="2">
+              <rect x="696" y="226" width="62" height="20" /><rect x="696" y="294" width="62" height="20" />
+            </g>
+            <rect x="60" y="372" width="800" height="8" fill="#cbbba2" />
+          </symbol>
+          <symbol id="res-tree-l" viewBox="-80 0 200 400">
+            <rect x="4" y="318" width="12" height="62" fill="#6b4a2e" />
+            <circle cx="10" cy="298" r="52" fill="#3f8a3a" /><circle cx="-24" cy="326" r="38" fill="#4e9a3f" /><circle cx="42" cy="322" r="40" fill="#5daa48" /><circle cx="-2" cy="282" r="20" fill="#7cc25a" opacity="0.6" />
+          </symbol>
+          <symbol id="res-tree-r" viewBox="780 0 200 400">
+            <rect x="884" y="312" width="13" height="68" fill="#6b4a2e" />
+            <circle cx="890" cy="290" r="60" fill="#3f8a3a" /><circle cx="852" cy="330" r="40" fill="#5daa48" /><circle cx="926" cy="328" r="38" fill="#4e9a3f" /><circle cx="880" cy="270" r="22" fill="#7cc25a" opacity="0.6" />
+          </symbol>
+          <symbol id="residence-art" viewBox="-80 0 1060 400">
+            <use href="#res-building" x="0" y="0" width="900" height="380" />
+            <use href="#res-tree-l" x="-80" y="0" width="200" height="400" />
+            <use href="#res-tree-r" x="780" y="0" width="200" height="400" />
+            <ellipse cx="130" cy="376" rx="44" ry="13" fill="#4e9a3f" /><ellipse cx="770" cy="377" rx="48" ry="13" fill="#4e9a3f" />
+          </symbol>
+          <!-- icônes (traits, 24px) -->
+          <symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+          <symbol id="ic-bus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="15" rx="2.5" /><path d="M5 11h14M8 18v2.5M16 18v2.5M8.5 14.5h.01M15.5 14.5h.01M7.5 6.5h9" /></g></symbol>
+          <symbol id="ic-train" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="14" rx="3" /><path d="M6 10h12M9 17l-2.5 4M15 17l2.5 4M9.5 13.5h.01M14.5 13.5h.01" /></g></symbol>
+          <symbol id="ic-paris" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M10.5 5h3L15 11H9l1.5-6zM9 11l-3 10M15 11l3 10M7.6 15.5h8.8M9.5 21a2.5 2.5 0 0 1 5 0" /></g></symbol>
+          <symbol id="ic-shop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9M4 9h16M4 9c0 1.7 1.2 3 2.7 3s2.6-1.3 2.6-3c0 1.7 1.2 3 2.7 3s2.7-1.3 2.7-3c0 1.7 1.2 3 2.6 3S20 10.7 20 9M5.5 12v8h13v-8M10 20v-5h4v5" /></g></symbol>
+          <symbol id="ic-tree" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-6M12 3l5 7h-2.5l3.5 5H6l3.5-5H7z" /></g></symbol>
+          <symbol id="ic-house" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5M10 20v-5h4v5" /></g></symbol>
+        </defs>
+      </svg>
+
+      <!-- ================= PLAN 1 — Ouverture ================= -->
+      <div id="s1" class="scene">
+        <div id="s1-sky"></div>
+        <div id="s1-dome" data-layout-allow-overflow></div>
+        <svg id="s1-swoosh" class="reveal" viewBox="0 0 520 220">
+          <path id="swoosh-shape" fill="#f2523f" />
+        </svg>
+      </div>
+
+      <!-- ================= PLAN 2 — Le programme ================= -->
+      <div id="s2" class="scene">
+        <div id="s2-move" class="scene">
+          <div id="s2-tags" data-layout-allow-overflow>
+            <div class="tag" id="tag-1" style="top: 0px">LMNP</div>
+            <div class="tag" id="tag-2" style="top: 72px">Jeanbrun</div>
+          </div>
+          <div id="s2-panel"></div>
+          <div id="s2-pills">
+            <div class="pill" id="pill-1"><span class="check"><svg><use href="#ic-check" /></svg></span><span>Appartements neufs du <b>studio</b> au <b>4 pièces</b></span></div>
+            <div class="pill" id="pill-2"><span class="check"><svg><use href="#ic-check" /></svg></span><span>Avec <b>balcon</b>, <b>terrasse</b> ou <b>jardin privatif</b></span></div>
+            <div class="pill" id="pill-3"><span class="check"><svg><use href="#ic-check" /></svg></span><span><b>Parking</b> en sous-sol et aérien</span></div>
+          </div>
+          <div id="s2-ground"></div>
+          <svg id="s2-art" viewBox="-80 0 1060 400">
+            <defs><clipPath id="ground-clip"><rect x="-80" y="0" width="1060" height="380" /></clipPath><clipPath id="bld-clip"><rect x="60" y="141" width="274" height="239" /><rect x="326" y="44" width="288" height="336" /><rect x="606" y="161" width="258" height="219" /></clipPath></defs>
+            <g clip-path="url(#ground-clip)"><g id="s2-bld"><use href="#res-building" x="0" y="0" width="900" height="380" /></g></g>
+            <g id="s2-glint-wrap" clip-path="url(#bld-clip)" opacity="0.0"><rect id="s2-glint" x="-200" y="40" width="70" height="360" fill="rgba(255,255,255,0.55)" transform="skewX(-20)" /></g>
+            <g class="s2-tree" id="s2-tree-1"><use href="#res-tree-l" x="-80" y="0" width="200" height="400" /></g>
+            <g class="s2-tree" id="s2-tree-2"><use href="#res-tree-r" x="780" y="0" width="200" height="400" /></g>
+            <ellipse class="s2-bush" cx="130" cy="376" rx="44" ry="13" fill="#4e9a3f" />
+            <ellipse class="s2-bush" cx="770" cy="377" rx="48" ry="13" fill="#4e9a3f" />
+          </svg>
+          <div class="legal" id="s2-legal" style="left: 40px; bottom: 30px">Illustration non contractuelle</div>
+        </div>
+      </div>
+
+      <!-- ================= Titre persistant (plans 1 → 2) ================= -->
+      <div id="title">
+        <div id="title-inner">
+          <div id="t-l1"></div>
+          <div id="t-l2"></div>
+          <div id="t-l3"><span id="t-l3-words"></span><span class="mask"><span id="rer">RER E<svg id="rer-scribble" viewBox="0 0 240 40" preserveAspectRatio="none"><path id="rer-scr-1" d="M6,18 C46,6 92,26 134,14 S206,6 234,16" fill="none" stroke="#f2523f" stroke-width="7" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" /><path id="rer-scr-2" d="M30,30 C80,20 150,34 222,24" fill="none" stroke="#f2523f" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" /></svg></span></span></div>
+        </div>
+      </div>
+
+      <!-- ================= PLAN 3 — Localisation ================= -->
+      <div id="s3" class="scene">
+        <svg id="world" viewBox="0 0 3840 2160">
+          <rect x="0" y="0" width="3840" height="2160" fill="url(#mapgrad)" />
+          <g id="world-gen"></g>
+          <!-- RER E (schématique) -->
+          <path id="rer-glow" d="M700,500 C1000,600 1450,860 1750,1000 S2300,1340 2500,1480 S2800,1720 2950,1820 S3250,2000 3420,2090 L3800,2300" fill="none" stroke="rgba(242,82,63,0.35)" stroke-width="34" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path id="rer-line" d="M700,500 C1000,600 1450,860 1750,1000 S2300,1340 2500,1480 S2800,1720 2950,1820 S3250,2000 3420,2090 L3800,2300" fill="none" stroke="#f2523f" stroke-width="14" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <g id="stations">
+            <g class="st" id="st-paris"><circle cx="700" cy="500" r="30" fill="#fff" stroke="#f2523f" stroke-width="10" /></g>
+            <g class="st" id="st-1"><circle cx="1250" cy="757" r="13" fill="#fff" stroke="#f2523f" stroke-width="6" /></g>
+            <g class="st" id="st-2"><circle cx="1750" cy="1000" r="13" fill="#fff" stroke="#f2523f" stroke-width="6" /></g>
+            <g class="st" id="st-3"><circle cx="2160" cy="1262" r="13" fill="#fff" stroke="#f2523f" stroke-width="6" /></g>
+            <g class="st" id="st-roissy"><circle cx="2500" cy="1480" r="14" fill="#fff" stroke="#f2523f" stroke-width="6" /></g>
+            <g class="st" id="st-ozoir"><circle cx="2950" cy="1820" r="24" fill="#fff" stroke="#f2523f" stroke-width="9" /></g>
+            <g class="st" id="st-gretz"><circle cx="3420" cy="2090" r="14" fill="#fff" stroke="#f2523f" stroke-width="6" /></g>
+          </g>
+          <g id="lbl-paris"><text x="640" y="430" font-family="Poppins" font-weight="800" font-size="92" fill="#fff" text-anchor="end">Paris</text></g>
+          <g id="pill-39" transform="translate(1530,780)">
+            <rect x="-10" y="-62" width="330" height="124" rx="62" fill="#fff" />
+            <circle cx="52" cy="0" r="44" fill="#f2523f" />
+            <use href="#ic-train" x="22" y="-30" width="60" height="60" style="color: #fff" />
+            <text x="200" y="22" font-family="Poppins" font-weight="700" font-size="62" fill="#2555ad" text-anchor="middle">39 min</text>
+          </g>
+          <!-- itinéraire bus + marche -->
+          <path id="bus-route" d="M2950,1820 C3040,1770 3120,1700 3230,1640" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <g id="walk-dots" fill="#fff">
+            <circle cx="3254" cy="1626" r="6" /><circle cx="3278" cy="1612" r="6" /><circle cx="3302" cy="1598" r="6" /><circle cx="3324" cy="1584" r="6" />
+          </g>
+          <g id="busstop"><circle cx="3230" cy="1640" r="15" fill="#fff" stroke="#2555ad" stroke-width="6" /></g>
+          <g id="bus-icon" opacity="0"><circle r="30" fill="#fff" /><use href="#ic-bus" x="-20" y="-20" width="40" height="40" style="color: #2555ad" /></g>
+          <g id="lbl-gare"><rect x="2560" y="1884" width="330" height="62" rx="31" fill="rgba(255,255,255,0.95)" /><text x="2725" y="1926" font-family="Poppins" font-weight="700" font-size="32" fill="#2555ad" text-anchor="middle">Gare RER E</text></g>
+          <g id="lbl-bus"><rect x="2930" y="1600" width="250" height="56" rx="28" fill="#f2523f" /><text x="3055" y="1638" font-family="Poppins" font-weight="600" font-size="28" fill="#fff" text-anchor="middle">13 min en bus</text></g>
+          <g id="lbl-walk"><rect x="3260" y="1640" width="220" height="52" rx="26" fill="rgba(255,255,255,0.95)" /><text x="3370" y="1675" font-family="Poppins" font-weight="600" font-size="26" fill="#2555ad" text-anchor="middle">3 min à pied</text></g>
+          <!-- résidence -->
+          <g id="pin-pulse" transform="translate(3350,1560)">
+            <circle id="pulse-1" r="40" fill="none" stroke="#f2523f" stroke-width="5" opacity="0" />
+            <circle id="pulse-2" r="40" fill="none" stroke="#f2523f" stroke-width="5" opacity="0" />
+          </g>
+          <g id="pin-wrap" transform="translate(3350,1560)">
+            <g id="pin">
+              <ellipse cx="0" cy="0" rx="22" ry="7" fill="rgba(0,0,0,0.35)" />
+              <path d="M0,0 C0,0 -52,-52 -52,-92 C-52,-122 -28,-146 0,-146 C28,-146 52,-122 52,-92 C52,-52 0,0 0,0 Z" fill="#f2523f" stroke="#fff" stroke-width="5" />
+              <use href="#ic-house" x="-27" y="-120" width="54" height="54" style="color: #fff" />
+            </g>
+          </g>
+          <g id="lbl-res"><rect x="3420" y="1430" width="300" height="70" rx="35" fill="#fff" /><text x="3570" y="1477" font-family="Poppins" font-weight="700" font-size="32" fill="#2555ad" text-anchor="middle">Votre résidence</text></g>
+        </svg>
+        <div id="s3-tri"></div>
+        <div id="s3-tri-glow"></div>
+        <div id="s3-city"></div>
+        <div id="s3-list">
+          <div class="loc"><span class="loc-ic"><svg><use href="#ic-bus" /></svg></span><span><b>Arrêt de bus</b> à 3 min à pied</span></div>
+          <div class="loc"><span class="loc-ic"><svg><use href="#ic-train" /></svg></span><span><b>Gare RER E</b> à 13 min en bus</span></div>
+          <div class="loc"><span class="loc-ic"><svg><use href="#ic-paris" /></svg></span><span><b>Paris</b> en 39 min de train</span></div>
+          <div class="loc"><span class="loc-ic"><svg><use href="#ic-shop" /></svg></span><span><b>Commerces</b> et <b>écoles</b> à proximité</span></div>
+          <div class="loc"><span class="loc-ic"><svg><use href="#ic-tree" /></svg></span><span><b>Bois des pins</b> à 14 min à pied</span></div>
+        </div>
+        <div class="legal" id="s3-legal">Plan schématique, non contractuel</div>
+      </div>
+
+      <div class="edge" id="edge-a"></div>
+
+      <!-- ================= PLAN 4 — Livraison ================= -->
+      <div id="s4" class="scene">
+        <div id="s4-move" class="scene">
+          <svg id="s4-ghost" class="ghost" viewBox="-80 0 1060 400"><use href="#residence-art" x="-80" y="0" width="1060" height="400" /></svg>
+          <div class="vignette"></div>
+          <div id="s4-head">
+            <div id="s4-livraison">Livraison</div>
+            <div id="s4-script-wrap">
+              <svg id="s4-brush" class="reveal" viewBox="0 0 760 180">
+                <path id="s4brush-shape" fill="#f2523f" />
+              </svg>
+              <div id="s4-script">immédiate</div>
+            </div>
+          </div>
+          <div id="s4-cards">
+            <div class="card" id="card-1">
+              <div class="card-ic"><svg viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M5 19.5c0-8.5 5.5-14 14.5-14.5 0 9.5-5.5 14.5-14 14.5" /><path class="draw" pathLength="1" d="M5 19.5l7.5-7.5" /></g></svg></div>
+              <div class="card-tx"><b>Isolation</b>conforme RE 2020</div>
+            </div>
+            <div class="card" id="card-2">
+              <div class="card-ic"><svg viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect class="draw" pathLength="1" x="4" y="3" width="16" height="18" rx="1.5" /><path class="draw" pathLength="1" d="M4 7.5h16M4 11h16M4 14.5h16" /><path class="draw" pathLength="1" d="M12 17v3M10.5 18.5l1.5 1.5 1.5-1.5" /></g></svg></div>
+              <div class="card-tx"><b>Volets roulants</b>électriques</div>
+            </div>
+            <div class="card" id="card-3">
+              <div class="card-ic"><svg viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" pathLength="1" d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z" /><path class="draw" pathLength="1" d="M9 12l2 2 4-4" /></g></svg></div>
+              <div class="card-tx"><b>Résidence</b>sécurisée</div>
+            </div>
+          </div>
+          <div class="legal" id="s4-legal">Illustration non contractuelle</div>
+        </div>
+      </div>
+
+      <div id="wipe">
+        <svg class="wipe-band" id="wipe-1" viewBox="0 -120 1920 640" style="top: -120px"><path id="wipe-s1" fill="#f2523f" /></svg>
+        <svg class="wipe-band" id="wipe-2" viewBox="0 240 1920 640" style="top: 240px"><path id="wipe-s2" fill="#ec4936" /></svg>
+        <svg class="wipe-band" id="wipe-3" viewBox="0 595 1920 640" style="top: 595px"><path id="wipe-s3" fill="#f45b47" /></svg>
+      </div>
+
+      <div class="edge" id="edge-b"></div>
+
+      <!-- ================= PLAN 5 — Habiter ou investir ================= -->
+      <div id="s5" class="scene">
+        <div id="s5-inner">
+          <svg id="s5-ghost" class="ghost" viewBox="-80 0 1060 400"><use href="#residence-art" x="-80" y="0" width="1060" height="400" /></svg>
+          <div id="s5-shade"></div>
+          <div id="s5-text">
+            <svg id="s5-flourish" class="reveal" viewBox="0 0 300 110">
+              <path id="flour-shape" fill="#f2523f" />
+            </svg>
+            <div id="s5-l1"></div>
+            <div id="s5-l2"><span class="w" id="w-hab">habiter</span> <span class="w" id="s5-ou">ou</span> <span class="w" id="w-inv">investir</span><span class="w" id="w-q">&nbsp;?</span>
+              <svg id="s5-underline" viewBox="0 0 1000 46" preserveAspectRatio="none"><path id="s5-ul" d="M10,26 C200,10 420,34 640,18 S900,14 990,22" fill="none" stroke="#f2523f" stroke-width="9" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" /></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PLAN 6 — CTA ================= -->
+      <div id="s6" class="scene">
+        <div id="s6-inner">
+          <div class="blob" id="s6-blob1" data-layout-allow-overflow></div>
+          <div class="blob" id="s6-blob2" data-layout-allow-overflow></div>
+          <div class="blob" id="s6-blob3" data-layout-allow-overflow></div>
+          <div id="s6-head" data-layout-allow-overflow></div>
+          <div class="s6-label" id="s6-l-web">En ligne sur</div>
+          <div class="cta-pill" id="s6-web"><span id="s6-web-text"></span><span id="s6-web-caret"></span></div>
+          <div class="s6-label" id="s6-l-tel">Par téléphone au</div>
+          <div class="cta-pill" id="s6-tel" data-layout-allow-overflow data-layout-allow-occlusion></div>
+          <div id="s6-person"><img src="assets/conseiller-cta.png" alt="" /></div>
+          <div class="legal" id="s6-legal">Illustrations non contractuelles. Dispositifs fiscaux soumis à conditions d'éligibilité. Médicis Immobilier Neuf.</div>
+        </div>
+      </div>
+
+      <div id="badge">m</div>
+
+      <!-- ================= Audio ================= -->
+      <audio id="bgm" src="assets/audio/whistle-business.mp3" data-start="0" data-duration="30" data-media-start="17.517" data-track-index="10" data-volume="0.9"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.35,"v":1},{"t":28.9,"v":1},{"t":30,"v":0}]}]}'></audio>
+      <audio id="sfx-1" src="assets/audio/whoosh-r.wav" data-start="2.62" data-duration="0.75" data-track-index="11" data-volume="0.32"></audio>
+      <audio id="sfx-2" src="assets/audio/whoosh-l.wav" data-start="6.7" data-duration="0.75" data-track-index="11" data-volume="0.32"></audio>
+      <audio id="sfx-3" src="assets/audio/whoosh-r.wav" data-start="14.2" data-duration="0.75" data-track-index="11" data-volume="0.36"></audio>
+      <audio id="sfx-4" src="assets/audio/whoosh-r.wav" data-start="19.3" data-duration="0.75" data-track-index="11" data-volume="0.32"></audio>
+      <audio id="sfx-5" src="assets/audio/whoosh-zoom.wav" data-start="24.42" data-duration="0.6" data-track-index="11" data-volume="0.36"></audio>
+    </div>
+
+    <script>
+      (function () {
+        // ---------- utilitaires déterministes ----------
+        function mulberry32(a) {
+          return function () {
+            a |= 0; a = (a + 0x6d2b79f5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        const f1 = (v) => v.toFixed(1);
+        function bez(p, t) {
+          const u = 1 - t;
+          return [
+            u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0],
+            u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1],
+          ];
+        }
+        function cubicD(p) {
+          return `M${p[0][0]},${p[0][1]} C${p[1][0]},${p[1][1]} ${p[2][0]},${p[2][1]} ${p[3][0]},${p[3][1]}`;
+        }
+        // Trait de pinceau : contour souple (variations basse fréquence) + poils secs en fin de trait
+        function brushD(p, w, seed, rough) {
+          const R = mulberry32(seed);
+          const k = rough == null ? 1 : rough;
+          const N = 90, top = [], bot = [];
+          const ph1 = R() * 6.28, ph2 = R() * 6.28, ph3 = R() * 6.28;
+          for (let i = 0; i <= N; i++) {
+            const t = i / N;
+            const a = bez(p, Math.max(0, t - 0.002)), b = bez(p, Math.min(1, t + 0.002));
+            let dx = b[0] - a[0], dy = b[1] - a[1];
+            const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+            const c = bez(p, t);
+            const head = Math.pow(Math.min(1, t / 0.09), 0.45);
+            const tail = Math.pow(Math.min(1, (1 - t) / 0.3), 0.85);
+            const wt = (w / 2) * (0.18 + 0.82 * head * tail);
+            const j1 = 1 + k * (0.06 * Math.sin(t * 9 + ph1) + 0.035 * Math.sin(t * 23 + ph2) + (R() - 0.5) * 0.03);
+            const j2 = 1 + k * (0.06 * Math.sin(t * 8 + ph3) + 0.035 * Math.sin(t * 19 + ph1) + (R() - 0.5) * 0.03);
+            top.push([c[0] - dy * wt * j1, c[1] + dx * wt * j1]);
+            bot.push([c[0] + dy * wt * j2, c[1] - dx * wt * j2]);
+          }
+          let d = "M" + top.map((q) => f1(q[0]) + "," + f1(q[1])).join(" L");
+          d += " L" + bot.reverse().map((q) => f1(q[0]) + "," + f1(q[1])).join(" L") + " Z";
+          // poils secs : fines traînées qui prolongent la fin du trait
+          for (let s2 = 0; s2 < 5; s2++) {
+            const off = (s2 / 4 - 0.5) * 0.7;
+            const t0 = 0.7 + R() * 0.08, t1 = 1.0 + R() * 0.05;
+            const sw = w * (0.03 + R() * 0.025);
+            const up = [], dn = [];
+            for (let i = 0; i <= 14; i++) {
+              const t = t0 + (t1 - t0) * (i / 14);
+              const a = bez(p, t - 0.002), b = bez(p, t + 0.002);
+              let dx = b[0] - a[0], dy = b[1] - a[1];
+              const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+              const c = bez(p, t);
+              const o = off * w * 0.5 * (1 - 0.35 * (i / 14));
+              const th = sw * (1 - i / 14) + 0.4;
+              up.push([c[0] - dy * (o + th), c[1] + dx * (o + th)]);
+              dn.push([c[0] - dy * (o - th), c[1] + dx * (o - th)]);
+            }
+            d += " M" + up.concat(dn.reverse()).map((q) => f1(q[0]) + "," + f1(q[1])).join(" L") + " Z";
+          }
+          return d;
+        }
+        function setBrush(shapeId, maskPathId, pts, w, seed, rough) {
+          document.getElementById(shapeId).setAttribute("d", brushD(pts, w, seed, rough));
+        }
+
+        // ---------- textes découpés ----------
+        function words(el, text, cls) {
+          el.innerHTML = text
+            .split(" ")
+            .map((w) => `<span class="mask"><span class="${cls}">${w}</span></span>`)
+            .join(" ");
+        }
+        words(document.getElementById("t-l1"), "Programme immobilier neuf", "w1");
+        document.getElementById("t-l2").innerHTML = "Ozoir-la-Ferrière"
+          .split("")
+          .map((c) => `<span class="mask" style="padding:0"><span class="ch">${c}</span></span>`)
+          .join("");
+        words(document.getElementById("t-l3-words"), "à 13 min en bus du", "w3");
+        document.getElementById("t-l3-words").insertAdjacentHTML("beforeend", " ");
+        document.getElementById("s3-city").innerHTML = "Ozoir-la-Ferrière"
+          .split("")
+          .map((c) => `<span class="mask" style="padding:0"><span class="cc">${c}</span></span>`)
+          .join("");
+        words(document.getElementById("s5-l1"), "Un projet d'achat immobilier neuf pour", "w5");
+        document.getElementById("s6-head").innerHTML = [
+          ["Prenez", 0], ["rendez-vous", 1], ["avec", 0], ["l'un", 0], ["de", 0], ["nos", 1], ["conseillers", 1],
+        ]
+          .map(([w, b]) => `<span class="mask"><span class="w6">${b ? "<b>" + w + "</b>" : w}</span></span>`)
+          .join(" ");
+        // téléphone : colonnes de chiffres qui défilent
+        const tel = "0 800 881 924";
+        let telHtml = "";
+        let di = 0;
+        for (const ch of tel) {
+          if (ch === " ") { telHtml += '<span class="dg-sp"></span>'; continue; }
+          const target = +ch;
+          let col = "";
+          for (let k = 1; k <= 9; k++) col += `<span>${(target + k) % 10}</span>`;
+          col += `<span>${target}</span>`;
+          telHtml += `<span class="dg"><span class="dg-col" id="dg-${di}">${col}</span></span>`;
+          di++;
+        }
+        document.getElementById("s6-tel").innerHTML = telHtml;
+        const DIGITS = di;
+        document.getElementById("s4-livraison").innerHTML = "Livraison".split("").map((c) => `<span class="lc" style="display:inline-block">${c}</span>`).join("");
+
+        // ---------- pinceaux ----------
+        setBrush("swoosh-shape", null, [[36, 178], [190, 168], [340, 110], [482, 40]], 76, 7);
+        setBrush("s4brush-shape", null, [[20, 120], [240, 96], [520, 84], [740, 58]], 118, 21);
+        setBrush("flour-shape", null, [[18, 86], [90, 70], [190, 40], [284, 22]], 46, 33);
+        // volet « coups de pinceau » : trois traits horizontaux qui couvrent l'écran
+        setBrush("wipe-s1", null, [[-520, 210], [300, 165], [1300, 240], [2600, 185]], 600, 61, 0.7);
+        setBrush("wipe-s2", null, [[-520, 555], [400, 585], [1400, 535], [2600, 560]], 600, 67, 0.7);
+        setBrush("wipe-s3", null, [[-520, 925], [500, 890], [1500, 950], [2600, 905]], 600, 71, 0.7);
+
+        // ---------- carte : génération déterministe ----------
+        const R = mulberry32(43362);
+        let g = "";
+        const rivers = [
+          "M0,380 C380,300 600,640 900,560 S1300,820 1500,1100 S1720,1700 2020,2160",
+          "M1000,640 C1300,560 1500,760 1800,620 S2300,500 2700,640 S3300,420 3840,520",
+        ];
+        for (const r of rivers) g += `<path d="${r}" fill="none" stroke="#2b6cb6" stroke-width="22" stroke-linecap="round" opacity="0.55"/>`;
+        function blob(cx, cy, r) {
+          const n = 18, pts = [];
+          for (let i = 0; i < n; i++) {
+            const a = (i / n) * Math.PI * 2, rr = r * (0.75 + R() * 0.5);
+            pts.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * 0.8]);
+          }
+          const mid = (a, b) => f1((a[0] + b[0]) / 2) + "," + f1((a[1] + b[1]) / 2);
+          let d = "M" + mid(pts[n - 1], pts[0]);
+          for (let i = 0; i < n; i++) d += ` Q${f1(pts[i][0])},${f1(pts[i][1])} ${mid(pts[i], pts[(i + 1) % n])}`;
+          return d + "Z";
+        }
+        const forests = [[2780, 1320, 280], [3620, 1460, 360], [3320, 2040, 240], [1950, 1660, 260], [1080, 650, 120], [2350, 760, 200], [3000, 880, 260], [3760, 1040, 220], [2640, 1960, 200], [3480, 1760, 80], [1400, 1450, 220], [600, 1500, 260]];
+        for (const [x, y, r] of forests) g += `<path d="${blob(x, y, r)}" fill="#1d4b4a" opacity="0.85"/>`;
+        const roads = [
+          "M900,560 L2000,760 L3840,820",
+          "M900,600 C1600,900 2400,1250 3150,1580 L3840,1820",
+          "M2400,0 C2500,600 2300,1200 2500,2160",
+          "M700,500 C600,900 500,1500 300,2160",
+          "M3150,1580 C3250,1200 3300,700 3400,0",
+        ];
+        for (const r of roads) g += `<path d="${r}" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="7" stroke-linecap="round"/>`;
+        function cluster(cx, cy, rad, n, mn, mx, op) {
+          for (let i = 0; i < n; i++) {
+            const a = R() * Math.PI * 2, d = Math.pow(R(), 0.6) * rad;
+            const x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d * 0.8;
+            const w = mn + R() * (mx - mn), h = mn + R() * (mx - mn), rot = (R() - 0.5) * 30;
+            g += `<rect x="${f1(x - w / 2)}" y="${f1(y - h / 2)}" width="${f1(w)}" height="${f1(h)}" rx="3" transform="rotate(${f1(rot)} ${f1(x)} ${f1(y)})" fill="rgba(255,255,255,${op})"/>`;
+          }
+        }
+        cluster(700, 500, 560, 560, 14, 34, 0.07);
+        cluster(1250, 760, 230, 90, 12, 28, 0.06);
+        cluster(1750, 1000, 210, 70, 12, 26, 0.06);
+        cluster(2160, 1262, 190, 60, 12, 26, 0.06);
+        cluster(2500, 1480, 210, 80, 12, 26, 0.065);
+        cluster(3150, 1640, 330, 170, 12, 30, 0.075);
+        cluster(3420, 2090, 150, 50, 12, 24, 0.06);
+        cluster(1300, 300, 240, 80, 12, 26, 0.05);
+        document.getElementById("world-gen").innerHTML = g;
+
+        // bus le long de l'itinéraire (même courbe que #bus-route, calculée analytiquement)
+        const BUS_CURVE = [[2950, 1820], [3040, 1770], [3120, 1700], [3230, 1640]];
+        const busEl = document.getElementById("bus-icon");
+        const busProxy = { p: 0 };
+        function placeBus() {
+          const q = bez(BUS_CURVE, Math.max(0, Math.min(1, busProxy.p)));
+          busEl.setAttribute("transform", `translate(${f1(q[0])},${f1(q[1])})`);
+        }
+        placeBus();
+
+        // ======================================================
+        //                 TIMELINE (une seule, en pause)
+        // ======================================================
+        const tl = gsap.timeline({ paused: true });
+        const B = 0.31579; // un temps de la musique (190 bpm)
+
+        // ---------- PLAN 1 : 0 → 3.0 ----------
+        tl.fromTo("#s1-dome", { y: 760 }, { y: 0, duration: 1.25, ease: "expo.out" }, 0.12);
+        tl.fromTo(".w1", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "power3.out", stagger: 0.07 }, 0.42);
+        tl.fromTo("#t-l2 .ch", { yPercent: 105, rotation: 8 }, { yPercent: 0, rotation: 0, duration: 0.6, ease: "expo.out", stagger: 0.022 }, 0.66);
+        tl.fromTo(".w3", { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: "power4.out", stagger: 0.05 }, 1.02);
+        tl.fromTo("#rer", { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: "power4.out" }, 1.3);
+        tl.fromTo("#rer-scr-1", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.4, ease: "power2.inOut" }, 1.62);
+        tl.fromTo("#rer-scr-2", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.32, ease: "power2.out" }, 1.86);
+        tl.fromTo("#s1-swoosh", { clipPath: "inset(0% 100% 0% 0% round 0px 80px 80px 0px)", rotation: -6, x: -30 }, { clipPath: "inset(0% 0% 0% 0% round 0px 80px 80px 0px)", rotation: 0, x: 0, duration: 0.5, ease: "power3.out" }, 1.75);
+        
+        tl.fromTo("#title-inner", { scale: 1 }, { scale: 1.03, duration: 1.05, ease: "sine.inOut" }, 1.6);
+
+        // ---------- TRANSITION 1 → 2 (drop musical à 3.0) ----------
+        tl.to("#s1-dome", { scale: 1.6, duration: 0.62, ease: "power3.inOut" }, 2.66);
+        tl.to("#s1-swoosh", { x: 1500, rotation: 8, opacity: 0, duration: 0.4, ease: "power3.in" }, 2.66);
+        tl.to("#title", { y: -404, scale: 0.56, duration: 0.72, ease: "power3.inOut" }, 2.72);
+        tl.to("#title-inner", { scale: 1, duration: 0.72, ease: "power2.inOut" }, 2.72);
+        tl.set("#s2", { opacity: 1 }, 2.9);
+
+        // ---------- PLAN 2 : 3.0 → 7.1 ----------
+        tl.fromTo("#s2-panel", { opacity: 0, scale: 0.88, y: 70, filter: "blur(10px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.75, ease: "expo.out" }, 3.0);
+        ["#pill-1", "#pill-2", "#pill-3"].forEach((id, i) => {
+          const t = 3.0 + B * 0.5 + i * B;
+          tl.fromTo(id, { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, t);
+          tl.fromTo(id + " .check", { scale: 0, rotation: -120 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.4)" }, t + 0.12);
+        });
+        tl.fromTo("#s2-ground", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out" }, 3.12);
+        tl.fromTo("#s2-bld", { y: 380 }, { y: 0, duration: 0.95, ease: "expo.out" }, 3.3);
+        tl.fromTo("#s2-tree-1", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, ease: "back.out(2)" }, 3.85);
+        tl.fromTo("#s2-tree-2", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, ease: "back.out(2)" }, 3.98);
+        tl.fromTo(".s2-bush", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.45, ease: "back.out(2.5)", stagger: 0.08 }, 4.06);
+        tl.fromTo("#tag-1", { xPercent: -105 }, { xPercent: 0, duration: 0.45, ease: "back.out(1.7)" }, 4.579);
+        tl.fromTo("#tag-2", { xPercent: -105 }, { xPercent: 0, duration: 0.45, ease: "back.out(1.7)" }, 4.579 + B);
+        tl.fromTo("#s2-legal", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 3.6);
+        // respiration + reflet sur les vitrages (temps fort 5.53)
+        tl.fromTo("#s2-panel", { y: 0 }, { y: -8, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 1, immediateRender: false }, 4.0);
+        tl.set("#s2-glint-wrap", { attr: { opacity: 1 } }, 5.45);
+        tl.fromTo("#s2-glint", { attr: { x: -200 } }, { attr: { x: 1100 }, duration: 0.9, ease: "power2.inOut" }, 5.45);
+
+        // ---------- TRANSITION 2 → 3 : volet diagonal (7.1) ----------
+        const polyA = (X) => `polygon(${X}px 0px, 2700px 0px, 2700px 1080px, ${X - 600}px 1080px)`;
+        tl.set("#s3", { opacity: 1 }, 6.8);
+        tl.set("#edge-a", { opacity: 1 }, 6.8);
+        tl.fromTo("#s3", { clipPath: polyA(2560) }, { clipPath: polyA(-760), duration: 0.68, ease: "power3.inOut" }, 6.8);
+        tl.fromTo("#edge-a", { x: 2560 - 315, rotation: 29.05 }, { x: -760 - 315, rotation: 29.05, duration: 0.68, ease: "power3.inOut" }, 6.8);
+        tl.set("#edge-a", { opacity: 0 }, 7.5);
+        tl.to("#s2-move", { x: -280, filter: "blur(6px)", duration: 0.68, ease: "power3.in" }, 6.8);
+        tl.to("#title", { x: -280, filter: "blur(6px)", duration: 0.68, ease: "power3.in" }, 6.8);
+        tl.set(["#s2", "#title", "#s1"], { opacity: 0 }, 7.52);
+
+        // ---------- PLAN 3 : 7.1 → 14.7 ----------
+        // caméra : vue large → poussée vers Ozoir
+        tl.fromTo("#world", { scale: 0.5, x: 0, y: 0 }, { scale: 0.53, x: -57.6, y: -32.4, duration: 2.6, ease: "sine.inOut" }, 7.0);
+        tl.fromTo("#st-paris", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.5, ease: "back.out(2.6)" }, 7.45);
+        tl.fromTo("#lbl-paris", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.6, ease: "expo.out" }, 7.55);
+        tl.fromTo(["#rer-line", "#rer-glow"], { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.75, ease: "power1.inOut" }, 7.62);
+        [["#st-1", 7.95], ["#st-2", 8.35], ["#st-3", 8.72], ["#st-roissy", 9.0], ["#st-ozoir", 9.28], ["#st-gretz", 9.45]].forEach(([id, t]) => {
+          tl.fromTo(id, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.42, ease: "back.out(3)" }, t);
+        });
+        tl.fromTo("#pill-39", { scale: 0, transformOrigin: "0% 50%", opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, 8.053);
+        tl.to("#world", { scale: 1, x: -1900, y: -1000, duration: 1.3, ease: "expo.inOut" }, 9.632);
+        tl.to("#world", { scale: 1.035, x: -2017.25, y: -1054.6, duration: 3.75, ease: "sine.inOut" }, 10.95);
+        // panneau triangle + liste
+        tl.fromTo("#s3-tri", { x: -760, y: -640 }, { x: 0, y: 0, duration: 0.75, ease: "expo.out" }, 10.2);
+        tl.fromTo("#s3-tri-glow", { x: -760, y: -640, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.75, ease: "expo.out" }, 10.26);
+        tl.fromTo("#s3-city .cc", { yPercent: 105 }, { yPercent: 0, duration: 0.5, ease: "expo.out", stagger: 0.018 }, 10.579);
+        tl.fromTo("#s3-list .loc", { x: -70, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: B / 2 }, 10.82);
+        tl.fromTo("#s3-list .loc-ic", { scale: 0 }, { scale: 1, duration: 0.45, ease: "back.out(2.6)", stagger: B / 2 }, 10.9);
+        // itinéraire
+        tl.fromTo("#lbl-gare", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 10.9);
+        tl.fromTo("#bus-route", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.85, ease: "power2.inOut" }, 11.1);
+        tl.set("#bus-icon", { attr: { opacity: 1 } }, 11.1);
+        tl.fromTo(busProxy, { p: 0 }, { p: 1, duration: 0.85, ease: "power2.inOut", onUpdate: placeBus, immediateRender: false }, 11.1);
+        tl.fromTo("#busstop", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.35, ease: "back.out(3)" }, 11.82);
+        tl.to("#bus-icon", { attr: { opacity: 0 }, duration: 0.25, ease: "power1.in" }, 11.95);
+        tl.fromTo("#lbl-bus", { opacity: 0, scale: 0.6, transformOrigin: "50% 100%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 11.45);
+        tl.fromTo("#walk-dots circle", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.3, ease: "back.out(3)", stagger: 0.07 }, 11.9);
+        tl.fromTo("#lbl-walk", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 12.3);
+        tl.fromTo("#pin", { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "bounce.out" }, 12.0);
+        tl.fromTo(["#pulse-1", "#pulse-2"], { attr: { r: 30 }, opacity: 0.9 }, { attr: { r: 150 }, opacity: 0, duration: 1.2, ease: "power2.out", stagger: 0.4, repeat: 1, repeatDelay: 0.2, immediateRender: false }, 12.3);
+        tl.fromTo("#lbl-res", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 12.45);
+        tl.fromTo("#s3-legal", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 7.6);
+
+        // ---------- TRANSITION 3 → 4 : coup de pinceau (14.7) ----------
+        const WIPES = ["#wipe-1", "#wipe-2", "#wipe-3"];
+        tl.fromTo(WIPES, { clipPath: "inset(0% 100% 0% 0% round 0px 260px 260px 0px)" }, { clipPath: "inset(0% 0% 0% 0% round 0px 260px 260px 0px)", duration: 0.42, ease: "power2.in", stagger: 0.07 }, 14.2);
+        tl.set("#s3", { opacity: 0 }, 14.75);
+        tl.set("#s4", { opacity: 1 }, 14.75);
+        tl.fromTo(WIPES, { clipPath: "inset(0% 0% 0% 0% round 260px 0px 0px 260px)" }, { clipPath: "inset(0% 0% 0% 100% round 260px 0px 0px 260px)", duration: 0.45, ease: "power2.out", stagger: 0.07, immediateRender: false }, 14.77);
+
+        // ---------- PLAN 4 : 14.7 → 19.7 ----------
+        tl.fromTo("#s4-ghost", { x: 0, scale: 1.04 }, { x: -110, scale: 1.08, duration: 5.4, ease: "none" }, 14.4);
+        document.querySelectorAll("#s4-livraison .lc").forEach((el, i, all) => {
+          const off = (i - (all.length - 1) / 2) * 46;
+          tl.fromTo(el, { x: off, opacity: 0 }, { x: 0, opacity: 1, duration: 0.85, ease: "expo.out" }, 14.75 + Math.abs(i - (all.length - 1) / 2) * 0.012);
+        });
+        tl.fromTo("#s4-brush", { clipPath: "inset(0% 100% 0% 0% round 0px 80px 80px 0px)" }, { clipPath: "inset(0% 0% 0% 0% round 0px 80px 80px 0px)", duration: 0.36, ease: "power3.out" }, 15.3);
+        tl.fromTo("#s4-script", { clipPath: "inset(0% 100% 0% 0%)", rotation: -10, scale: 0.9 }, { clipPath: "inset(0% 0% 0% 0%)", rotation: -4, scale: 1, duration: 0.7, ease: "power2.out" }, 15.45);
+        tl.fromTo("#s4-cards .card", { y: 140, opacity: 0, rotationX: -70, transformPerspective: 1400, transformOrigin: "50% 100%" }, { y: 0, opacity: 1, rotationX: 0, duration: 0.8, ease: "back.out(1.3)", stagger: 0.16 }, 15.95);
+        tl.fromTo("#s4-cards .card-ic", { scale: 0.4, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2.2)", stagger: 0.16 }, 16.15);
+        tl.fromTo("#s4-cards .draw", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDasharray: 1, strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut", stagger: 0.07 }, 16.35);
+        tl.fromTo("#s4-cards .card", { scale: 1 }, { scale: 1.035, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.06, immediateRender: false }, 17.211);
+        tl.fromTo("#s4-legal", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 15.2);
+        tl.fromTo("#s4-script-wrap", { y: 0 }, { y: -6, duration: 1.1, ease: "sine.inOut", yoyo: true, repeat: 1 }, 17.4);
+
+        // ---------- TRANSITION 4 → 5 : volet diagonal inverse (19.7) ----------
+        const polyB = (X) => `polygon(-700px 0px, ${X}px 0px, ${X - 600}px 1080px, -700px 1080px)`;
+        tl.set("#s5", { opacity: 1 }, 19.4);
+        tl.set("#edge-b", { opacity: 1 }, 19.4);
+        tl.fromTo("#s5", { clipPath: polyB(-100) }, { clipPath: polyB(2620), duration: 0.68, ease: "power3.inOut" }, 19.4);
+        tl.fromTo("#edge-b", { x: -100 - 315, rotation: 29.05 }, { x: 2620 - 315, rotation: 29.05, duration: 0.68, ease: "power3.inOut" }, 19.4);
+        tl.set("#edge-b", { opacity: 0 }, 20.1);
+        tl.to("#s4-move", { x: 280, filter: "blur(6px)", duration: 0.68, ease: "power3.in" }, 19.4);
+        tl.set("#s4", { opacity: 0 }, 20.12);
+
+        // ---------- PLAN 5 : 19.7 → 24.8 ----------
+        tl.fromTo("#s5-ghost", { scale: 1.0, x: 0 }, { scale: 1.12, x: 60, duration: 5.4, ease: "none" }, 19.4);
+        tl.fromTo("#s5-flourish", { clipPath: "inset(0% 100% 0% 0% round 0px 80px 80px 0px)" }, { clipPath: "inset(0% 0% 0% 0% round 0px 80px 80px 0px)", duration: 0.32, ease: "power3.out" }, 19.98);
+        tl.fromTo(".w5", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "power3.out", stagger: 0.055 }, 20.0);
+        tl.fromTo("#w-hab", { scale: 2.3, opacity: 0, filter: "blur(12px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power4.out" }, 20.684 - 0.08);
+        tl.fromTo("#s5-ou", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 20.9);
+        tl.fromTo("#w-inv", { y: -130, rotation: -10, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.5, ease: "back.out(2.6)" }, 21.0 - 0.06);
+        tl.fromTo("#w-q", { rotation: -200, scale: 0, transformOrigin: "60% 60%" }, { rotation: 0, scale: 1, duration: 0.55, ease: "back.out(2.2)" }, 21.316 - 0.05);
+        tl.fromTo("#s5-ul", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 22.1);
+        tl.fromTo("#s5-l2", { scale: 1 }, { scale: 1.05, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 23.211);
+        tl.fromTo("#s5-text", { scale: 1 }, { scale: 1.03, duration: 2.2, ease: "sine.inOut" }, 22.3);
+
+        // ---------- TRANSITION 5 → 6 : zoom traversant (24.8) ----------
+        tl.to("#s5-inner", { scale: 2.4, opacity: 0, filter: "blur(14px)", duration: 0.45, ease: "power3.in" }, 24.52);
+        tl.set("#s6", { opacity: 1 }, 24.68);
+        tl.fromTo("#s6-inner", { scale: 0.8, opacity: 0, filter: "blur(12px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 24.68);
+        tl.set("#s5", { opacity: 0 }, 25.1);
+
+        // ---------- PLAN 6 : 24.8 → 30 ----------
+        tl.fromTo("#s6-blob1", { x: 0, y: 0 }, { x: -120, y: 60, duration: 5.3, ease: "sine.inOut" }, 24.7);
+        tl.fromTo("#s6-blob2", { x: 0, y: 0 }, { x: 140, y: -40, duration: 5.3, ease: "sine.inOut" }, 24.7);
+        tl.fromTo(".w6", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "power3.out", stagger: 0.05 }, 24.74);
+        tl.fromTo("#s6-l-web", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, 25.45);
+        tl.fromTo("#s6-web", { scale: 0.4, rotation: -6, opacity: 0, transformOrigin: "0% 50%", boxShadow: "0px 0px 0px #f2523f" }, { scale: 1, rotation: 0, opacity: 1, boxShadow: "-11px 11px 0px #f2523f", duration: 0.55, ease: "back.out(1.8)" }, 25.6);
+        const web = "medicis-immobilier-neuf.fr";
+        const webEl = document.getElementById("s6-web-text");
+        const typer = { n: 0 };
+        function applyType() { webEl.textContent = web.slice(0, Math.round(typer.n)); }
+        applyType();
+        tl.fromTo(typer, { n: 0 }, { n: web.length, duration: 0.8, ease: "none", onUpdate: applyType, immediateRender: false }, 25.85);
+        tl.to("#s6-web-caret", { opacity: 0, duration: 0.1, ease: "none" }, 26.75);
+        tl.fromTo("#s6-person", { y: 760, rotation: -9 }, { y: 0, rotation: 0, duration: 0.95, ease: "back.out(1.15)" }, 25.75);
+        tl.fromTo("#s6-l-tel", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, 26.5);
+        tl.fromTo("#s6-tel", { x: 360, opacity: 0, boxShadow: "0px 0px 0px #f2523f" }, { x: 0, opacity: 1, boxShadow: "-11px 11px 0px #f2523f", duration: 0.6, ease: "expo.out" }, 26.6);
+        for (let i = 0; i < DIGITS; i++) {
+          tl.fromTo(`#dg-${i}`, { y: 0 }, { y: -110 * 9, duration: 0.75, ease: "power3.out" }, 26.66 + i * 0.035);
+        }
+        tl.set(".dg-col span:not(:last-child)", { opacity: 0 }, 27.62);
+        tl.fromTo("#s6-tel", { scale: 1 }, { scale: 0.94, duration: 0.09, ease: "power1.in", immediateRender: false }, 27.316 - 0.09);
+        tl.to("#s6-tel", { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.45)" }, 27.316);
+        tl.fromTo("#s6-web", { scale: 1 }, { scale: 1.04, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 28.263);
+        tl.fromTo("#s6-legal", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "none" }, 26.2);
+        tl.fromTo(["#s6-tel", "#s6-person"], { scale: 1 }, { scale: 1.03, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 29.842 - 0.04);
+        tl.fromTo("#badge", { scale: 1 }, { scale: 1.25, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 29.842 - 0.04);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
